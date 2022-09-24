@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView,Menu,MenuItem,TFile, Notice, Plugin } from 'obsidian';
+import { App,Editor, MarkdownView,Menu,MenuItem,TFile, Notice,Plugin } from 'obsidian';
 
 // 🚩--------定义全局变量--------
 const imageExtensions: Set<string> = new Set(['jpeg', 'jpg', 'png', 'gif', 'svg', 'bmp']);
@@ -15,9 +15,9 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		this.registerDocument(document); // 调用注册文档方法
 		app.workspace.on("window-open", // 当打开编辑器窗口时，触发
-		  (workspaceWindow, window) => { 
+		(workspaceWindow, window) => { 
 			this.registerDocument(window.document);
-		  });
+		});
 		// 🚩--------创建一个按钮--------
 		// This creates an icon in the left ribbon.
 		const ribbonIconEl = this.addRibbonIcon('dice', 'Sample Plugin', (evt: MouseEvent) => {
@@ -44,7 +44,7 @@ export default class MyPlugin extends Plugin {
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 	}
-	 onElement(
+	onElement(
 		el: Document,
 		event: keyof HTMLElementEventMap,
 		selector: string,
@@ -72,11 +72,11 @@ export default class MyPlugin extends Plugin {
 	
 
 /**
- * 获取图片文件
+ * 获取所有的图片文件TFile类型对象的数组
  * @param app 
- * @returns  包含图片文件的列表
+ * @returns  attachments 包含图片文件File类型对象的数组 TFile[]
  */
-getAllImageFilesList = (app: App): TFile[] => {
+getAllImageFilesList = (): TFile[] => {
 	// 获取库中所有文件
 	const allFiles: TFile[] = app.vault.getFiles();
 	const attachments: TFile[] = [];
@@ -92,6 +92,49 @@ getAllImageFilesList = (app: App): TFile[] => {
 	// 返回 附件数组 attachments
 	return attachments;
 };
+
+/**
+ * 通过图片文件的全路径URL字符串 获取 图片的文件TFile类型对象
+ * @param imageURL  图片的全路径字符串
+ * @returns imageFile
+ */
+getFileViaFullURLOfImage = (imageURL: string): TFile[] =>{
+	let imageFileFullPath: string;
+	const fileList: TFile[] = [];
+	const allImageFiles: TFile[] = this.getAllImageFilesList();
+	allImageFiles.forEach((imageFile)=>{
+		imageFileFullPath =  app.vault.getResourcePath(imageFile);
+		if(imageURL===imageFileFullPath){
+			// 如果当前图片URL 等于 通过图片文件获取的图片URL,则返回当前图片文件对象
+			fileList.push(imageFile);
+		}
+	});
+	return fileList;
+}
+/**
+ * 用于获取图片文件附件的全路径 
+ * 格式：app://local/D:/Projects/obsidian-plugin-dev/obsidian-plugin-dev/img/Pasted%20image%2020220924074354.png?1663976634713
+ * @param imageFile 图片的TFile类型对象
+ */
+// getImageFileFullPath = (imageFile: TFile): string =>{
+// 	const allImageFiles: TFile[] = this.getAllImageFilesList();
+// 	// let imageFullPath: string;
+// 	// const imagePath: string = imageFile.basename +"."+imageFile.extension;
+// 	const filePath: string = app.vault.getResourcePath(imageFile);
+// 	return filePath;
+// }
+
+getCurrentFileOfImage = (app: App) => {
+	// 初始化TFile对象
+	// const currentImageFile: TFile = new TFile();
+	// 获取所有图片的文件的TFile类型数组
+	const allImageFiles = this.getAllImageFilesList();
+	allImageFiles.forEach((imageFile)=>{
+		console.log("--------basename+extension--------");
+		console.log(imageFile.basename+imageFile.extension);
+	})
+	// return currentImageFile;
+}
 
 /**
  * 注册按钮移出
@@ -124,13 +167,14 @@ onClick(event: MouseEvent) {
     const target = (event.target as Element);
     const imgType = target.localName;
     const menu = new Menu();
+	let fileList: TFile[];
     switch (imgType) {
 		// 当事件作用的目标元素是img标签时
       case "img": {
         const image = (target as HTMLImageElement).currentSrc;
         const thisURL = new URL(image);
+		fileList = this.getFileViaFullURLOfImage(image);
         const Proto = thisURL.protocol;
-		const fileList = this.getAllImageFilesList(this.app);
 		// 当图片元素的协议是以下几种，则开始执行删除操作
         switch (Proto) {
           case "app:":
@@ -143,8 +187,8 @@ onClick(event: MouseEvent) {
                 .setTitle("Delete image url and file")
                 .onClick(async () => {
                   try {
-					for (const file of fileList) {
-						// 删除图片的功能
+					for (const file of fileList){
+						// 删除图片
 						await app.vault.trash(file, false);
 						new Notice("Image deleted from the file navigator !", SUCCESS_NOTICE_TIMEOUT);
 					}
