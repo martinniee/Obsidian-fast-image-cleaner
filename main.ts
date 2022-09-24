@@ -1,4 +1,4 @@
-import { App,Editor, MarkdownView,Menu,MenuItem,TFile, Notice,Plugin } from 'obsidian';
+import { App,Menu,MenuItem,TFile, Notice,Plugin } from 'obsidian';
 
 // 🚩--------定义全局变量--------
 const imageExtensions: Set<string> = new Set(['jpeg', 'jpg', 'png', 'gif', 'svg', 'bmp']);
@@ -172,6 +172,8 @@ onClick(event: MouseEvent) {
 		// 当事件作用的目标元素是img标签时
       case "img": {
         const image = (target as HTMLImageElement).currentSrc;
+		const imageDom = (target as HTMLImageElement);
+		// console.log("imgType:" + imgType); // img
         const thisURL = new URL(image);
 		fileList = this.getFileViaFullURLOfImage(image);
         const Proto = thisURL.protocol;
@@ -188,8 +190,16 @@ onClick(event: MouseEvent) {
                 .onClick(async () => {
                   try {
 					for (const file of fileList){
+						// 删除图片的dom结构
+						// 获取图片元素的父级div的父级div
+						const parent_div: HTMLDivElement = imageDom.parentElement?.parentElement as HTMLDivElement;
+						// 获取图片元素的父级div
+						const parentOfimge: HTMLDivElement = imageDom.parentElement as HTMLDivElement; 
+						parent_div.removeChild(parentOfimge);
+						console.log("🚩--------parent_dic attributename--------:" + parent_div.getAttributeNames);
 						// 删除图片
 						await app.vault.trash(file, false);
+						console.log("--图片--"+thisURL+"被删除了");
 						new Notice("Image deleted from the file navigator !", SUCCESS_NOTICE_TIMEOUT);
 					}
                   } catch {
