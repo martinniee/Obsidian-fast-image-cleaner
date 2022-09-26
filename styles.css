@@ -6,3 +6,27 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+/* 图片的父级元素 */
+.image-embed {
+	position: relative;
+	display: inline-block;
+	font-size: 0;
+}
+/* 图片的删除按钮 */
+.image-embed .btn-delete {
+    position: absolute;
+    z-index: 100;
+    padding: 4px 3px;
+    opacity: 0;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    font-size: 31px;
+}
+.btn-delete svg {
+    border: none;
+}
+.image-embed:hover .btn-delete {
+	opacity: 1;
+}
