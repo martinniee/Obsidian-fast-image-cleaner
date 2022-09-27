@@ -1,4 +1,4 @@
-import { App, Menu, TFile, Notice, Plugin} from "obsidian";
+import { App, TFile, Notice, Plugin} from "obsidian";
 
 // 🚩--------定义全局变量--------
 const imageExtensions: Set<string> = new Set([
@@ -26,33 +26,9 @@ export default class MyPlugin extends Plugin {
 				this.registerDocument(window.document);
 			}
 		);
-		// 🚩--------创建一个按钮--------
-		// This creates an icon in the left ribbon.
-		const ribbonIconEl = this.addRibbonIcon(
-			"dice",
-			"Sample Plugin",
-			(evt: MouseEvent) => {
-				// Called when the user clicks the icon.
-				new Notice("This is a notice!");
-			}
-		);
-		// Perform additional things with the ribbon
-		ribbonIconEl.addClass("my-plugin-ribbon-class");
-
-		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-		const statusBarItemEl = this.addStatusBarItem();
-		statusBarItemEl.setText("Status Bar Text");
-
-		// This adds a settings tab so the user can configure various aspects of the plugin
-		// this.addSettingTab(new SampleSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
 		this.registerDomEvent(document, "click", (evt: MouseEvent) => {
-			console.log("插件 被启用了 ");
-			// console.log("click", evt);
+			console.log("delete image on hover 插件 被启用了 ");
 		});
-
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
@@ -69,6 +45,7 @@ export default class MyPlugin extends Plugin {
 		el.on(event, selector, listener, options);
 		return () => el.off(event, selector, listener, options);
 	}
+
 	// 注册文档
 	registerDocument(document: Document) {
 		this.register(
@@ -90,7 +67,13 @@ export default class MyPlugin extends Plugin {
 	removeImageDOM = (parentNode: HTMLElement, targetNode: HTMLElement) => {
 		parentNode.removeChild(targetNode);
 	};
-
+	/**
+	 * 删除 “删除图片按钮”
+	 */
+	deleteButton = ()=>{
+		const btn_delete: HTMLButtonElement = document.querySelector(".btn-delete") as HTMLButtonElement;
+		btn_delete.parentElement?.removeChild(btn_delete);
+	}
 	/**
 	 * 用于获取动态生成的删除按钮 btn_delete
 	 * @returns 删除按钮元素的对象
@@ -102,17 +85,7 @@ export default class MyPlugin extends Plugin {
 		btn_delete.innerHTML ='<svg fill="#ff0000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="48px" height="48px"><path d="M 28 7 C 25.243 7 23 9.243 23 12 L 23 15 L 13 15 C 11.896 15 11 15.896 11 17 C 11 18.104 11.896 19 13 19 L 15.109375 19 L 16.792969 49.332031 C 16.970969 52.510031 19.600203 55 22.783203 55 L 41.216797 55 C 44.398797 55 47.029031 52.510031 47.207031 49.332031 L 48.890625 19 L 51 19 C 52.104 19 53 18.104 53 17 C 53 15.896 52.104 15 51 15 L 41 15 L 41 12 C 41 9.243 38.757 7 36 7 L 28 7 z M 28 11 L 36 11 C 36.552 11 37 11.449 37 12 L 37 15 L 27 15 L 27 12 C 27 11.449 27.448 11 28 11 z M 19.113281 19 L 44.886719 19 L 43.212891 49.109375 C 43.153891 50.169375 42.277797 51 41.216797 51 L 22.783203 51 C 21.723203 51 20.846109 50.170328 20.787109 49.111328 L 19.113281 19 z M 32 23.25 C 31.033 23.25 30.25 24.034 30.25 25 L 30.25 45 C 30.25 45.966 31.033 46.75 32 46.75 C 32.967 46.75 33.75 45.966 33.75 45 L 33.75 25 C 33.75 24.034 32.967 23.25 32 23.25 z M 24.642578 23.251953 C 23.677578 23.285953 22.922078 24.094547 22.955078 25.060547 L 23.652344 45.146484 C 23.685344 46.091484 24.462391 46.835938 25.400391 46.835938 C 25.421391 46.835938 25.441891 46.835938 25.462891 46.835938 C 26.427891 46.801938 27.183391 45.991391 27.150391 45.025391 L 26.453125 24.939453 C 26.419125 23.974453 25.606578 23.228953 24.642578 23.251953 z M 39.355469 23.251953 C 38.388469 23.224953 37.580875 23.974453 37.546875 24.939453 L 36.849609 45.025391 C 36.815609 45.991391 37.571109 46.801938 38.537109 46.835938 C 38.558109 46.836938 38.578609 46.835938 38.599609 46.835938 C 39.537609 46.835938 40.314656 46.091484 40.347656 45.146484 L 41.044922 25.060547 C 41.078922 24.094547 40.321469 23.285953 39.355469 23.251953 z" /></svg>';
 		return btn_delete;
 	};
-
-	/**
-	 * 将html字符串转为dom 元素
-	 * @param html html元素（标签）的字符串
-	 * @return html dom对象
-	 * */
-	htmlToElems(html: string) {
-		const temp = document.createElement("template");
-		temp.innerHTML = html;
-		return temp;
-	}
+	
 	/**
 	 * 获取所有的图片文件TFile类型对象的数组
 	 * @param app
@@ -179,29 +152,26 @@ export default class MyPlugin extends Plugin {
 	};
 
 	/**
-	 * 注册按钮移出
-	 * @param menu
+	 * 注册鼠标移出
+	 * @param img
 	 * @param document
 	 */
-	registerEscapeButton(menu: Menu, document: Document = activeDocument) {
-		menu.register(
+	registerMouseout(img: HTMLImageElement, document: Document = activeDocument) {
+		this.register(
 			this.onElement(
 				document,
-				"keydown" as keyof HTMLElementEventMap,
-				"*",
-				(e: KeyboardEvent) => {
-					if (e.key === "Escape") {
-						e.preventDefault();
-						e.stopPropagation();
-						menu.hide();
-					}
+				"mouseout" as keyof HTMLElementEventMap,
+				"img",
+				(e: MouseEvent) => {
+					console.log("鼠标移出去到图片:");
+					this.deleteButton();
 				}
 			)
 		);
 	}
 
 	/**
-	 * 
+	 * 鼠标移入
 	 * @param event 事件
 	 * @returns 
 	 */
@@ -215,17 +185,16 @@ export default class MyPlugin extends Plugin {
 			// 当事件作用的目标元素是img标签时
 			case "img": {
 				const image = (target as HTMLImageElement).currentSrc;
-				const imageDom = target as HTMLImageElement;
-				console.log("------imageDom------:" + imageDom); // img
+				const imageDOM = target as HTMLImageElement;
 				const thisURL = new URL(image);
-				console.log("------imageDom thisURL------:" + thisURL); 
+				console.log("鼠标移入到图片:" + thisURL);
 				fileList = this.getFileObjectViaFullURLOfCurrentImage(image);
 				const Proto = thisURL.protocol;
 				// 🚩--------获取动态的图片删除按钮--------
 				const btn_delete: HTMLElement = this.getDynamicDeleteButton();
+				console.log("btn_delete:  " + btn_delete);
 				// 将动态生成的按钮添加到img元素的父级div元素下作为第一个子元素
-				imageDom.parentElement?.insertBefore(btn_delete,imageDom);
-				// 删除图片的dom
+				imageDOM.parentElement?.insertBefore(btn_delete,imageDOM);
 				// 当图片元素的协议是以下几种，则开始执行删除操作
 				switch (Proto) {
 					case "app:":
@@ -237,13 +206,12 @@ export default class MyPlugin extends Plugin {
 						async ()=>{
 							try {
 							// 获取图片元素的父级div的父级div
-							const parent_div: HTMLDivElement = imageDom.parentElement?.parentElement as HTMLDivElement;
+							const parent_div: HTMLDivElement = imageDOM.parentElement?.parentElement as HTMLDivElement;
 							// 获取图片元素的父级div
-							const parentOfImge: HTMLDivElement = imageDom.parentElement as HTMLDivElement;
+							const parentOfImge: HTMLDivElement = imageDOM.parentElement as HTMLDivElement;
 							this.removeImageDOM(parent_div, parentOfImge);
 							// 删除图片文件
 							for (const file of fileList) await app.vault.trash(file, false);
-							console.log("--图片--" + thisURL + "被删除了");
 							new Notice(
 								"Image deleted from the file navigator !",SUCCESS_NOTICE_TIMEOUT);
 							} catch {
@@ -262,5 +230,6 @@ export default class MyPlugin extends Plugin {
 				new Notice("No handler for this image type!");
 				return;
 		}
+
 	}
 }
