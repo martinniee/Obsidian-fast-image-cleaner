@@ -8,24 +8,27 @@ If your plugin does not need CSS, delete this file.
 */
 
 /* 图片的父级元素 */
-.image-embed {
-	position: relative;
-	display: inline-block;
-	font-size: 0;
+.image-embed{
+    border: 6px solid #73d8a3;
+}
+.image-embed img{
+    /* border: 6px solid red; */
 }
 /* 图片的删除按钮 */
 .image-embed .btn-delete {
     position: absolute;
     z-index: 100;
     padding: 4px 3px;
-    opacity: 0;
+    /* opacity: 0; */
     font-weight: bold;
     cursor: pointer;
     text-align: center;
     font-size: 31px;
+    background-color: #bbbaccd9;
+    /* border-style: none; */
 }
 .btn-delete svg {
-    border: none;
+	border: none;
 }
 .image-embed:hover .btn-delete {
 	opacity: 1;
