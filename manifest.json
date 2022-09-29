@@ -1,6 +1,6 @@
 {
-	"id": "obsidian-delete-image-on-hover-plugin",
-	"name": "delete image on hover Plugin",
+	"id": "nn-delete-image-by-contextmenu",
+	"name": "Delete Image By Context-menu ",
 	"version": "0.0.1",
 	"minAppVersion": "0.15.4",
 	"description": "Delete the specified image in the document to the system Trash as well as remove the link in the document when the mouse hovers over the image",
