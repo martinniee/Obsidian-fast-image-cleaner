@@ -26,7 +26,7 @@ export class NathanDeleteImageSettingsTab extends PluginSettingTab {
     display(): void {
         const {containerEl}  = this;
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'Delete Image By Context-menu Settings' });
+        containerEl.createEl('h2', { text: 'Delete Image In Use Settings' });
 
         // 创建一个控制删除的图片目的地的选项
         new Setting(containerEl)

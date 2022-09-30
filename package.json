@@ -1,5 +1,5 @@
 {
-	"name": "nn-delete-image-by-contextmenu",
+	"name": "nn-delete-image-in-use",
 	"version": "0.0.1",
 	"description": "Delete the specified image in the document to the system Trash as well as remove the link in the document when the mouse right-click on image",
 	"main": "main.js",

@@ -17,7 +17,7 @@ export default class NathanDeleteImage extends Plugin {
     settings: NathanDeleteImageSettings ;
 	// 当插件启用后
 	async onload() {
-		console.log("Delete Image By Context-menu plugin loaded...") 
+		console.log("Delete Image In Use plugin loaded...") 
 		// 添加插件选项
         this.addSettingTab(new NathanDeleteImageSettingsTab(this.app, this));
 		// 加载插件选项
@@ -33,7 +33,7 @@ export default class NathanDeleteImage extends Plugin {
 	}
 	// 当插件禁用后
 	onunload() {
-		console.log("Delete Image By Context-menu plugin unloaded...")
+		console.log("Delete Image In Use plugin unloaded...")
 	
 	}
 
@@ -159,7 +159,7 @@ onClick(event: MouseEvent) {
             menu.addItem((item: MenuItem) =>
 			// 设置一个图标 垃圾箱
               item.setIcon("trash")
-                .setTitle("Delete Image By Context-menu url and file")
+                .setTitle("Delete Image In Use url and file")
                 .onClick(async () => {
                   try {
 					for (const file of fileList){
@@ -207,7 +207,7 @@ onClick(event: MouseEvent) {
 	// 注册菜单按钮
     this.registerEscapeButton(menu);
     menu.showAtPosition({ x: event.pageX, y: event.pageY });
-    this.app.workspace.trigger("nn-delete-image-by-contextmenu:contextmenu", menu);
+    this.app.workspace.trigger("nn-delete-image-in-use:contextmenu", menu);
   }
 }
 

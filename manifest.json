@@ -1,6 +1,6 @@
 {
-	"id": "nn-delete-image-by-contextmenu",
-	"name": "Delete Image By Context-menu ",
+	"id": "nn-delete-image-in-use",
+	"name": "Delete Image In Use",
 	"version": "0.0.1",
 	"minAppVersion": "0.15.4",
 	"description": "Delete the specified image in the document to the system Trash as well as remove the link in the document when the mouse hovers over the image",
