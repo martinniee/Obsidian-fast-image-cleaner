@@ -5,15 +5,6 @@ available in the app when your plugin is enabled.
 
 If your plugin does not need CSS, delete this file.
 
-*/
-
-/* 图片的父级元素 */
-.image-embed{
-    border: 6px solid #73d8a3;
-}
-.image-embed img{
-    /* border: 6px solid red; */
-}
 /* 图片的删除按钮 */
 .image-embed .btn-delete {
     position: absolute;
