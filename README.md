@@ -1,6 +1,7 @@
 # nn-delete-image-in-use
 
 
+> [中文版](ZH.md)
 
 ## Installation
 
