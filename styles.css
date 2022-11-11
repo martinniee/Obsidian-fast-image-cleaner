@@ -6,21 +6,22 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 /* 图片的删除按钮 */
-.image-embed .btn-delete {
+.image-embed .btn-delete{
     position: absolute;
-    z-index: 100;
     padding: 4px 3px;
-    /* opacity: 0; */
-    font-weight: bold;
-    cursor: pointer;
     text-align: center;
-    font-size: 31px;
-    background-color: #bbbaccd9;
-    /* border-style: none; */
+    background-color: transparent;
 }
-.btn-delete svg {
-	border: none;
+
+
+.image-embed .btn-delete svg ,
+.image-embed .btn-delete svg path{
+    border: none;
+    width: 35px;
+    cursor: pointer;
+    height: auto;
 }
+
 .image-embed:hover .btn-delete {
 	opacity: 1;
 }
