@@ -1,5 +1,5 @@
 {
-	"name": "nn-delete-image-in-use",
+	"name": "NL-fast-image-cleaner",
 	"version": "0.0.1",
 	"description": "When you right-click on an image with your mouse, you can tap the context menu item to easily delete the image file and remove the link in use from a Markdown document.",
 	"main": "main.js",
