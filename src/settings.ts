@@ -5,10 +5,13 @@ import { PluginSettingTab, Setting, App } from 'obsidian';
 // 插件选项的接口
 export interface NathanDeleteImageSettings {
     deleteOption: string;
+    logsModal: boolean;
 }
 
 export const DEFAULT_SETTINGS: NathanDeleteImageSettings = {
     deleteOption: '.trash',
+    logsModal: true,
+
 };
 
 // 定义插件选项类
@@ -26,7 +29,7 @@ export class NathanDeleteImageSettingsTab extends PluginSettingTab {
     display(): void {
         const {containerEl}  = this;
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'Delete Image In Use Settings' });
+        containerEl.createEl('h2', { text: 'Fast Image Cleaner Settings' });
 
         // 创建一个控制删除的图片目的地的选项
         new Setting(containerEl)
