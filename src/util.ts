@@ -14,7 +14,7 @@ export const getAllImgDivs = (): HTMLCollection => {
     // 2.得 实时预览模式 下 内容区div preview_content (div markdown-source-view cm-s-obsidian mod-cm6 is-readable-line-width is-folding is-live-preview node-insert-event)
     const preview_content: HTMLCollection = leaf_active[0].getElementsByClassName("markdown-source-view cm-s-obsidian mod-cm6 is-folding is-live-preview node-insert-event");
     // 3.得 内容区下所有图片附件div embed_divs
-    const embed_divs: HTMLCollection = preview_content[0].getElementsByClassName("internal-embed image-embed is-loaded");
+    const embed_divs: HTMLCollection = preview_content[0].getElementsByClassName("internal-embed media-embed image-embed is-loaded");
     return embed_divs;
 };
 /**
@@ -30,6 +30,82 @@ export const removeImgDom = (target: HTMLElement) => {
     // 3、删除img_div元素
     content_container.removeChild(img_div);
 };
+
+
+/**
+ * 函数表示从目标字符串origin_str中去除根据正则表达式regex匹配的出来的文本
+ * @param origin_str     原始目标字符串
+ * @param regex     正则表达式
+ */ 
+const trimFromRegExp = (origin_str: string,regex: RegExp): string => {
+   // 获取所有的匹配内容包含信息的二位数组。第一维储存所有的匹配内容，第二维储存某个匹配内容相关的数据
+   // 注意：二维数组的第二维度的第一项表示匹配的内容 Group0（不包括所有可能的匹配组,Group1,2,3...）
+   const matching_array = Array.from(origin_str.matchAll(regex));
+   // 4.遍历 依次所有的匹配内容matching_array[i][0] 从 目标字符串origin_str 去除
+   for (let i = 0; i < matching_array.length; i++) {
+       // 将目标字符串中的 匹配字符串用 ''替换,将替换后的结果覆盖 目标字符串
+       origin_str = origin_str.replace(matching_array[i][0],'')
+   }
+   return origin_str;
+}
+
+
+/**
+ * 移除图片引用链接
+ * 
+ * 
+ * @param imagePath  图片的链接路径，不包括父级目录，为 图片文件名.后缀 形式
+ * @param mdFile  需要删除的图片所在的md文件
+ */
+export const removeReferenceLink = async (imagePath: string, mdFile: TFile)=> {
+        const origin_filecontents = await app.vault.read(mdFile);
+        const new_filecontents: string[] = [];
+
+        const fileContents_array = origin_filecontents.split("\n");
+        
+        for (const fileContent of fileContents_array ) {
+            // fileContent 表示遍历的某一行 
+            const regRefLink1 = new  RegExp("!\\[(.*)?\\]\\(((.*\\/)+)?"+imagePath+"\\)",'gm'); // markdown
+            const regRefLink2 = new  RegExp("!\\[\\[.*?"+imagePath+"\\]\\]",'gm'); // wiki
+            
+            const isEscaped = fileContent.includes("%20");
+
+            // 如果当前行包含 %20 ,说明路径中含有空格，需要解码为空格
+            const fileContent_decode = decodeURI(fileContent);
+
+            const isIncludeImage = fileContent_decode.includes(imagePath);
+            const isMarkdownStyle= fileContent_decode.match(regRefLink1) !=null;
+            const isWikiStyle= fileContent_decode.match(regRefLink2) !=null;
+
+            if(isEscaped){
+                // 判断当前行是否要移除的图片所在的行，并且引用链接是否为markdown格式
+                if (isIncludeImage && isMarkdownStyle) {
+                    // 获取去除 引用链接后的 内容
+                    new_filecontents.push(trimFromRegExp(fileContent_decode,regRefLink1));
+                    // 判断当前行是否要移除的图片所在的行，并且引用链接是否为markdown格式
+                } else if (isIncludeImage && isWikiStyle ) { 
+                    new_filecontents.push(trimFromRegExp(fileContent_decode,regRefLink2))
+                }else{
+                    // 拼接 每行内容 作为新的文档内容，包括移除引用链接的行
+                    new_filecontents.push(fileContent)
+                }
+            }else{
+                // 判断当前行是否要移除的图片所在的行，并且引用链接是否为markdown格式
+                if (isIncludeImage && isMarkdownStyle) {
+                    // 获取去除 引用链接后的 内容
+                    new_filecontents.push(trimFromRegExp(fileContent_decode,regRefLink1));
+                    // 判断当前行是否要移除的图片所在的行，并且引用链接是否为markdown格式
+                } else if (isIncludeImage && isWikiStyle ) { 
+                    new_filecontents.push(trimFromRegExp(fileContent_decode,regRefLink2))
+                }else{
+                    // 拼接 每行内容 作为新的文档内容，包括移除引用链接的行
+                    new_filecontents.push(fileContent)
+                }
+            }
+        }
+        // 写入文档
+        app.vault.adapter.write(mdFile.path,new_filecontents.join("\n"));
+}
 
 /**
  * * 为页面中所有图片元素动态地添加删除按钮
@@ -139,7 +215,6 @@ export const isRemoveImage = (img_url: string): [boolean,string[]] => {
         //   break; //则跳出当前循环，继续遍历下一个md文档
         }
         console.log("ref_num----" + ref_num);
-        console.log("----------222222222222222")
     const result: boolean = ref_num > 1 ? false : true;
     return [result,md_path];
 };
@@ -160,9 +235,12 @@ export const deleteImg = (target_img: HTMLImageElement, plugin: NathanDeleteImag
         case "img": {
             // 获取图片元素的 url 格式为 app://local/D:/路径.../文件名.png?1668149164011
             const img_url = target_img.currentSrc;
-            const imageDom = target_img;
+            // const imgPath = img_url.
+            // const imageDom = target_img;
             const thisURL = new URL(img_url);
             file = getImgByURL(img_url)[0];
+            const imgBasename = file.basename +"."+file.extension;
+            
             const Proto = thisURL.protocol;
             switch (Proto) {
                 case "app:":
@@ -170,7 +248,8 @@ export const deleteImg = (target_img: HTMLImageElement, plugin: NathanDeleteImag
                 case "http:":
                 case "https:":
                         // 删除图片的dom结构
-                        removeImgDom(imageDom);
+                        // removeImgDom(imageDom);
+                        removeReferenceLink(imgBasename,app.workspace.getActiveFile() as TFile);
                         if (deleteOption === ".trash") {
                             // 删除图片
                             app.vault.trash(file, false);

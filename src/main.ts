@@ -96,6 +96,7 @@ export default class NathanDeleteImage extends Plugin {
 		// let img_target: HTMLImageElement = document.createElement("img");
 		// 当目标元素（nodeType）为 button, svg 或 path时，调用button绑定的监听事件，删除图片
 		let del_btn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
+		
 		if(nodeType === "button" || nodeType === "svg" || nodeType === "path"){
 			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
 			img_target = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
