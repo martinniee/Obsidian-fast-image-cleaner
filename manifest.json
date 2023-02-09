@@ -1,10 +1,10 @@
 {
-	"id": "nn-delete-image-in-use",
-	"name": "Delete Image In Use",
-	"version": "0.0.1",
-	"minAppVersion": "0.15.4",
-	"description": "When you right-click on an image with your mouse, you can tap the context menu item to easily delete the image file and remove the link in use from a Markdown document.",
-	"author": "Nathanie",
-	"authorUrl": "https://obsidian.md",
+	"id": "NL-fast-image-cleaner",
+	"name": "Fast Image Cleaner",
+	"version": "0.2.0",
+	"minAppVersion": "1.1.9",
+	"description": "You can quickly clean up image with its referenced link by clicking the delete button",
+	"author": "Nathaniel",
+	"authorUrl": "https://github.com/martinniee/Obsidian-fast-image-cleaner/",
 	"isDesktopOnly": true
 }
