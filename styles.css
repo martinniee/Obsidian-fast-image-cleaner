@@ -28,11 +28,9 @@ If your plugin does not need CSS, delete this file.
 }
 .fast-image-cleaner-center-wrapper{
     display: flex;
-    /* max-width: 560px; */
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
-
 .fast-image-cleaner-log{
     margin-bottom: 13px;
     margin-top: 5px;
