@@ -1,4 +1,4 @@
-import {  Plugin } from 'obsidian';
+import {  Plugin,parseLinktext } from 'obsidian';
 import { NathanDeleteImageSettingsTab } from './settings';
 import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from './settings';
 import * as Util from './util';
@@ -37,6 +37,11 @@ export default class NathanDeleteImage extends Plugin {
 		});
 		app.workspace.on("editor-change", () => {
 			console.log("------editor-change-------------");
+			Util.clearAllDelBtns();
+			Util.addDelBtn(Util.getAllImgDivs());
+		});
+		app.workspace.on("active-leaf-change", () => {
+			console.log("------active-leaf-change-------------");
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
@@ -93,18 +98,19 @@ export default class NathanDeleteImage extends Plugin {
 		// event.target 获取鼠标事件的目标元素
 		const target = event.target as Element;
 		const nodeType = target.localName;
-		// let img_target: HTMLImageElement = document.createElement("img");
-		// 当目标元素（nodeType）为 button, svg 或 path时，调用button绑定的监听事件，删除图片
 		let del_btn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
-		
+		// 当目标元素（nodeType）为 button, svg 或 path时，调用button绑定的监听事件，删除图片
 		if(nodeType === "button" || nodeType === "svg" || nodeType === "path"){
 			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
 			img_target = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
-			const image_basepath = img_target.parentNode.
-			if(Util.isRemoveImage(img_target.currentSrc)[0] as boolean){
-				Util.deleteImg(img_target,this);
+			const imgBaseName = img_target.parentElement?.getAttribute("src") as string;
+			
+			// console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
+			// console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);			
+			if(Util.isRemoveImage(imgBaseName as string)[0] as boolean){
+				Util.deleteImg(img_target,imgBaseName as string,this);
 			}else{
-				const logs: string[] = Util.isRemoveImage(img_target.currentSrc)[1] as string[];
+				const logs: string[] = Util.isRemoveImage(imgBaseName as string)[1] as string[];
 				const modal = new LogsModal(logs, this.app);
 				modal.open();
 			}
