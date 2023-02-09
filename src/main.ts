@@ -1,4 +1,4 @@
-import {  Plugin,Notice } from 'obsidian';
+import {  Plugin,TFile} from 'obsidian';
 import { NathanDeleteImageSettingsTab } from './settings';
 import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from './settings';
 import * as Util from './util';
@@ -100,6 +100,7 @@ export default class NathanDeleteImage extends Plugin {
 		if(nodeType === "button" || nodeType === "svg" || nodeType === "path"){
 			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
 			img_target = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
+            const currentMd = app.workspace.getActiveFile() as TFile;
 			const imgBaseName = img_target.parentElement?.getAttribute("src") as string;
 			
 			// console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
@@ -108,7 +109,7 @@ export default class NathanDeleteImage extends Plugin {
 				Util.deleteImg(img_target,imgBaseName as string,this);
 			}else{
 				const logs: string[] = Util.isRemoveImage(imgBaseName as string)[1] as string[];
-				const modal = new LogsModal(logs, this.app);
+				const modal = new LogsModal(currentMd,imgBaseName,logs, this.app);
 				modal.open();
 			}
 		}

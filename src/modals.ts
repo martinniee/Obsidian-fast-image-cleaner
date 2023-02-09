@@ -1,5 +1,5 @@
-import { Modal, App } from 'obsidian';
-
+import { Modal, App, TFile } from 'obsidian';
+import { removeReferenceLink } from "./util";
 
 export class LogsModal extends Modal {
 
@@ -7,11 +7,15 @@ export class LogsModal extends Modal {
     //     throw new Error('Method not implemented.');
     // }
 
-    textToView: string[];
-
-    constructor(textToView: string[], app: App) {
+    textToView: string[]; 
+    currentMd: TFile;
+    imgBaseName: string;
+    
+    constructor(currentMd: TFile, imgBaseName: string ,textToView: string[], app: App) {
         super(app);
         this.textToView = textToView;
+        this.currentMd = currentMd;
+        this.imgBaseName = imgBaseName;
     }
 
     getLog(): string{
@@ -47,11 +51,18 @@ export class LogsModal extends Modal {
         const buttonWrapper = contentEl.createEl('div');
         buttonWrapper.addClass('fast-image-cleaner-center-wrapper');
 
-        const cancelButton = buttonWrapper.createEl('button', { text: 'close' });
+        const closeButton = buttonWrapper.createEl('button', { text: 'close' });
+        const removeLinkButton = buttonWrapper.createEl('button', { text: 'remove link' });
 
-        cancelButton.addClass('unused-images-button');
-        cancelButton.addEventListener('click', () => {
+
+        closeButton.addClass('unused-images-button');
+        removeLinkButton.addClass('unused-images-button');
+        removeLinkButton.setAttribute("aria-label","Continue to remove the reference link to the current image in the current document");
+        closeButton.addEventListener('click', () => {
             myModal.close();
+        });
+        removeLinkButton.addEventListener('click', () => {
+            removeReferenceLink(this.imgBaseName,this.currentMd)
         });
     }
 }
