@@ -182,7 +182,7 @@ export const isRemoveImage = (imageName: string): [boolean,string[]] => {
     const currentMd = app.workspace.getActiveFile() as TFile;
     const de_img = getImageFileByName(currentMd,imageName) as TFile;
     if(de_img == undefined){
-                console.error(" cannot get image file ")
+        new Notice(` cannot get the image file`);
     }
     // 定义一个数组保存md文档信息
     const md_path: string[] = [];
@@ -216,7 +216,7 @@ export const isRemoveImage = (imageName: string): [boolean,string[]] => {
                 }
             }
         }
-        console.log("ref_num----" + ref_num);
+        // console.log("ref_num----" + ref_num);
     const result: boolean = ref_num > 1 ? false : true;
     return [result,md_path];
 };
@@ -243,13 +243,11 @@ export const getImageFileByName = (currentMd: TFile, imageName: string): TFile |
                             return imageFile;
                         }
                     } catch (error) {
-                        console.error("failed to get image file");  
+                        new Notice(` cannot get the image file`);
                     }
 				}
 			}
-		}else{
-            console.error("cannot find the image");  
-        }
+		}
 	} 
     // return imageFile;
     // console.log("file path" + imageFile.parent);
@@ -291,17 +289,18 @@ export const deleteImg = (targetImg: HTMLImageElement, imageName: string, plugin
                         if (deleteOption === ".trash") {
                             // 删除图片
                             app.vault.trash(file, false);
-                            console.log( "--图片--" + thisURL + "被删除了");
+                            // console.log( "--图片--" + thisURL + "被删除了");
                             new Notice("Image moved to Obsidian Trash !",SUCCESS_NOTICE_TIMEOUT);
                         } else if (deleteOption === "system-trash") {
                             // 删除图片
                             app.vault.trash(file, true);
-                            console.log("--图片--" + thisURL + "被删除了");
+                            // console.log("--图片--" + thisURL + "被删除了");
                             new Notice("Image moved to System Trash !",SUCCESS_NOTICE_TIMEOUT);
                         } else if (deleteOption === "permanent") {
                             // 删除图片
                             app.vault.delete(file);
-                            console.log("--图片--" + thisURL + "被删除了");new Notice("Image deleted Permanently !",SUCCESS_NOTICE_TIMEOUT);
+                            // console.log("--图片--" + thisURL + "被删除了");
+                            new Notice("Image deleted Permanently !",SUCCESS_NOTICE_TIMEOUT);
                         }
                     // 
                     break;

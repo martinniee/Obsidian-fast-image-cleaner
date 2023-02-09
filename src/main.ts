@@ -1,4 +1,4 @@
-import {  Plugin,parseLinktext } from 'obsidian';
+import {  Plugin,Notice } from 'obsidian';
 import { NathanDeleteImageSettingsTab } from './settings';
 import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from './settings';
 import * as Util from './util';
@@ -31,17 +31,17 @@ export default class NathanDeleteImage extends Plugin {
 			}
 		);
 		app.workspace.on("file-open", () => {
-			console.log("------file-open-------------");
+			new Notice(` file-open`);
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
 		app.workspace.on("editor-change", () => {
-			console.log("------editor-change-------------");
+			new Notice(` editor-change`);
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
 		app.workspace.on("active-leaf-change", () => {
-			console.log("------active-leaf-change-------------");
+			new Notice(`active-leaf-change`);
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
