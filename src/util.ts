@@ -244,6 +244,7 @@ export const getImageFileByName = (currentMd: TFile, imageName: string): TFile |
                         }
                     } catch (error) {
                         new Notice(` cannot get the image file`);
+                        return undefined;
                     }
 				}
 			}
