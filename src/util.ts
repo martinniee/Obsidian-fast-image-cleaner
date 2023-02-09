@@ -15,9 +15,6 @@ export const getAllImgDivs = (): HTMLCollection => {
     const preview_content: HTMLCollection = leaf_active[0].getElementsByClassName("markdown-source-view cm-s-obsidian mod-cm6 is-folding is-live-preview node-insert-event");
     // 3.得 内容区下所有图片附件div embed_divs
     const embed_divs: HTMLCollection = preview_content[0]?.getElementsByClassName("internal-embed media-embed image-embed is-loaded");
-    if( embed_divs == undefined || embed_divs == null){
-        new Notice('cannot get image element');
-    }
     return embed_divs;
 };
 /**
@@ -115,7 +112,7 @@ export const removeReferenceLink = async (imagePath: string, mdFile: TFile)=> {
  * @param img_list 图片区域div元素集合，文档中图片元素区域div对象集合，img_list中的元素是img标签的父级div标签对象
  */
 export const addDelBtn = (img_list: HTMLCollection) => {
-    for (let index = 0; index < img_list.length; index++) {
+    for (let index = 0; index < img_list?.length; index++) {
         const btn_del: HTMLButtonElement = document.createElement("button");
         // 1、动态生成删除按钮 btn_del
         btn_del.setAttribute("class", "btn-delete");
@@ -185,7 +182,7 @@ export const isRemoveImage = (imageName: string): [boolean,string[]] => {
     const currentMd = app.workspace.getActiveFile() as TFile;
     const de_img = getImageFileByName(currentMd,imageName) as TFile;
     if(de_img == undefined){
-        new Notice(` cannot get the image file`);
+        new Notice(` 1111`);
     }
     // 定义一个数组保存md文档信息
     const md_path: string[] = [];

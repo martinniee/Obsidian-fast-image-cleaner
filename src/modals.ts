@@ -64,6 +64,7 @@ export class LogsModal extends Modal {
         });
         removeLinkButton.addEventListener('click', () => {
             removeReferenceLink(this.imgBaseName,this.currentMd)
+            myModal.close();
         });
     }
 }
