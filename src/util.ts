@@ -156,19 +156,19 @@ export const getAllImages = (): TFile[] => {
  * @param imageURL  图片的全路径字符串
  * @returns imageFile
  */
-export const getImgByURL= (imageURL: string): TFile[] => {
-    let imageFileFullPath: string;
-    const file: TFile[] = [];
-    const allImageFiles: TFile[] = getAllImages();
-    allImageFiles.forEach((imageFile) => {
-        imageFileFullPath = app.vault.getResourcePath(imageFile);
-        if (imageURL === imageFileFullPath) {
-            // 如果当前图片URL 等于 通过图片文件获取的图片URL,则返回当前图片文件对象
-            file.push(imageFile);
-        }
-    });
-        return file;
-};
+// export const getImgByURL= (imageURL: string): TFile[] => {
+//     let imageFileFullPath: string;
+//     const file: TFile[] = [];
+//     const allImageFiles: TFile[] = getAllImages();
+//     allImageFiles.forEach((imageFile) => {
+//         imageFileFullPath = app.vault.getResourcePath(imageFile);
+//         if (imageURL === imageFileFullPath) {
+//             // 如果当前图片URL 等于 通过图片文件获取的图片URL,则返回当前图片文件对象
+//             file.push(imageFile);
+//         }
+//     });
+//     return file;
+// };
 
    
 
@@ -178,9 +178,12 @@ export const getImgByURL= (imageURL: string): TFile[] => {
     2.遍历所有图片并于当前的图片对比，如果相等，则记录这个md文档，计数器+1，然后进入下轮遍历（因为可能一个文档存在引用同一个图片多次的情况）对比匹配后只需要记录+1一次。
     3.遍历完后，如果计数器的值>1,说明至少两个文档同时引用相同的图片
  */
-export const isRemoveImage = (img_url: string): [boolean,string[]] => {
-    // 获取当前删除图片元素的图片对象TFile类型
-    const de_img: TFile[] = getImgByURL(img_url);
+export const isRemoveImage = (imageName: string): [boolean,string[]] => {
+    const currentMd = app.workspace.getActiveFile() as TFile;
+    const de_img = getImageFileByName(currentMd,imageName) as TFile;
+    if(de_img == undefined){
+                console.error(" cannot get image file ")
+    }
     // 定义一个数组保存md文档信息
     const md_path: string[] = [];
     let cur_md_path = '';
@@ -188,7 +191,6 @@ export const isRemoveImage = (img_url: string): [boolean,string[]] => {
     // 定义一个计数器用于储存 同一个图片被多个md文档引用的文档个数
     let ref_num = 0;
     const resolvedLinks = app.metadataCache.resolvedLinks;
-    const current_md: TFile = app.workspace.getActiveFile() as TFile;
         // 得到 删除图片对应的基于库的绝对路径,也就是imageFile的库的绝对路径
         // const imageFileFullPath: string = app.vault.getResourcePath(imageFile);
         // const img_file = app.vault.getAbstractFileByPath(imageFileFullPath) as TAbstractFile;
@@ -196,51 +198,87 @@ export const isRemoveImage = (img_url: string): [boolean,string[]] => {
         // const path_valt_based = img_file?.path;
         for (const [mdFile, links] of Object.entries(resolvedLinks)) {
             // filePath 是源文件引用的目标文件的链接路径, nr是引用的数量
-            if(current_md.path === mdFile){
+            if(currentMd.path === mdFile){
                 // 如果遍历到当前打开的md文档,则将路径path保存在 cur_md_path中
-                cur_md_path = current_md.path;
+                cur_md_path = currentMd.path;
                 md_path.unshift(cur_md_path)
             }
             for (const [filePath, nr] of Object.entries(links)) {
-            if (de_img[0].path === filePath) {
-                ref_num++;
-                if (nr > 1) {
-                    // 说明当前文档引用同一个图片两次
-                    break; //则跳出当前循环
+                if (de_img.path === filePath) {
+                    ref_num++;
+                    if (nr > 1) {
+                        // 说明当前文档引用同一个图片两次
+                        ref_num+=1;
+                        // break; //则跳出当前循环
+                    }
+                    // 说明此时引用的图片 = 删除的图片，记录md信息
+                    md_path.push(mdFile)
                 }
-                // 说明此时引用的图片 = 删除的图片，记录md信息
-                md_path.push(mdFile)
             }
-            }
-        //   break; //则跳出当前循环，继续遍历下一个md文档
         }
         console.log("ref_num----" + ref_num);
     const result: boolean = ref_num > 1 ? false : true;
     return [result,md_path];
 };
+
+
+/**
+*	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
+*
+*
+*  @param currentMd  当前需要被删除的图片所在的markdown文件
+   @param currentMd  当前需要被删除的图片名 name.extension
+*/
+
+export const getImageFileByName = (currentMd: TFile, imageName: string): TFile | undefined => {
+	const resolvedLinks = app.metadataCache.resolvedLinks;
+    // let imageFile: TFile;
+	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
+		if (currentMd.path === mdFile) {
+			for (const [filePath, nr] of Object.entries(links)) {
+				if (filePath.includes(imageName)) {
+					try {
+                        const imageFile: TFile = app.vault.getAbstractFileByPath(filePath) as TFile;
+                        if (imageFile instanceof TFile) {
+                            return imageFile;
+                        }
+                    } catch (error) {
+                        console.error("failed to get image file");  
+                    }
+				}
+			}
+		}else{
+            console.error("cannot find the image");  
+        }
+	} 
+    // return imageFile;
+    // console.log("file path" + imageFile.parent);
     
+};
+
 /**
- * 得到图片url得到
+ * 删除图片文件 （附件引用链接，附件文件）
+ * 
+ * @param targetImg 图片html元素对象
+ * @param imageName  图片基本名称 name.extension 
+ * @param plugin 当前插件
+ * @returns 
  */
-/**
- * 删除图片
- * @param target_img 图片元素对象
- */
-export const deleteImg = (target_img: HTMLImageElement, plugin: NathanDeleteImage) => {
+export const deleteImg = (targetImg: HTMLImageElement, imageName: string, plugin: NathanDeleteImage) => {
     const deleteOption = plugin.settings.deleteOption;
     let file: TFile;
-    const imgType = target_img.localName;
+    const imgType = targetImg.localName;
     switch (imgType) {
         // 当事件作用的目标元素是img标签时
         case "img": {
             // 获取图片元素的 url 格式为 app://local/D:/路径.../文件名.png?1668149164011
-            const img_url = target_img.currentSrc;
-            // const imgPath = img_url.
-            // const imageDom = target_img;
-            const thisURL = new URL(img_url);
-            file = getImgByURL(img_url)[0];
-            const imgBasename = file.basename +"."+file.extension;
-            
+            const imageUrl = targetImg.currentSrc;
+            const thisURL = new URL(imageUrl);
+            const currentMd = app.workspace.getActiveFile() as TFile;
+            file =  getImageFileByName(currentMd,imageName) as TFile;
+            if(file == undefined ){
+                console.error(" cannot get image file ")
+            }
             const Proto = thisURL.protocol;
             switch (Proto) {
                 case "app:":
@@ -249,7 +287,7 @@ export const deleteImg = (target_img: HTMLImageElement, plugin: NathanDeleteImag
                 case "https:":
                         // 删除图片的dom结构
                         // removeImgDom(imageDom);
-                        removeReferenceLink(imgBasename,app.workspace.getActiveFile() as TFile);
+                        removeReferenceLink(imageName,app.workspace.getActiveFile() as TFile);
                         if (deleteOption === ".trash") {
                             // 删除图片
                             app.vault.trash(file, false);

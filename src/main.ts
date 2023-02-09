@@ -100,6 +100,7 @@ export default class NathanDeleteImage extends Plugin {
 		if(nodeType === "button" || nodeType === "svg" || nodeType === "path"){
 			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
 			img_target = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
+			const image_basepath = img_target.parentNode.
 			if(Util.isRemoveImage(img_target.currentSrc)[0] as boolean){
 				Util.deleteImg(img_target,this);
 			}else{
