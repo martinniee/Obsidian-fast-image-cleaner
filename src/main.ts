@@ -31,17 +31,14 @@ export default class NathanDeleteImage extends Plugin {
 			}
 		);
 		app.workspace.on("file-open", () => {
-			new Notice(` file-open`);
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
 		app.workspace.on("editor-change", () => {
-			new Notice(` editor-change`);
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
 		app.workspace.on("active-leaf-change", () => {
-			new Notice(`active-leaf-change`);
 			Util.clearAllDelBtns();
 			Util.addDelBtn(Util.getAllImgDivs());
 		});
