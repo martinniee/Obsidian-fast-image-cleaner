@@ -6,8 +6,6 @@
 
 This plugin allows you to quickly remove image attachments and referenced links from your documents in **live view** mode. Mouse over the image and click the delete button.
 
-> ⚠️ If you do not see the delete button icon, then you can press the space in the blank space of the document 
-
 ## Demo
 
 
@@ -39,24 +37,40 @@ This plugin allows you to quickly remove image attachments and referenced links 
 
 
 
-## Use
-
-1. Install and enable the plug-in
-2. In **Live View** mode Mouse over the image and you should see a delete button, click the delete button to delete the image file and remove the reference link from the document
+## Install
 
 ### Install from plugin marketplace
 
-直接从插件市场安装
+
 
 ........
 
 ### Install from brat
 
-👦 添加 `martinniee/Obsidian-fast-image-cleaner`到BRAT
+👦 add  `martinniee/Obsidian-fast-image-cleaner` to BRAT
 
 ### Manual installation
 
 ✋Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner
+
+## Use
+
+1. Install and enable the plug-in
+2. In **Live View** mode Mouse over the image and you should see a delete button, click the delete button to delete the image file and remove the reference link from the document
+
+
+
+
+
+删除目的设置
+
+![image-20230209180042264](assets/README-images/image-20230209180042264.png)
+
+Please make sure that you select the destination for the deleted images under "Fast Images Cleaner Settings" tab. You have 3 options:
+
+1. **Move to Obsidian Trash** - Files are going to be moved to the `.trash` under the Obsidian Vault.
+2. **Move to System Trash** - Files are going to be moved to the Operating System trash.
+3. **Permanently Delete** - Files are going to be destroyed permanently. You won't beable to revert back.
 
 
 
@@ -69,5 +83,7 @@ This plugin follows the structure of the [Obsidian Sample Plugin](https://github
 ## Support
 
 ❤ If you enjoy using Obsidian-Fast-Image-Cleaner, then please support my work by giving me a charge at: https://ko-fi.com/nathanielll
+
+
 
 <a href='https://ko-fi.com/J3J6IL7MY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

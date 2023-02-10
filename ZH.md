@@ -73,9 +73,11 @@
 
 ![image-20230209180042264](assets/README-images/image-20230209180042264.png)
 
-Please make sure that you select the destination for the deleted images under "Clear Unused Images Settings" tab. You have 3 options:
+请确保你在 "通过上下文菜单设置删除图片 "选项卡下选择了被删除图片的目的地。你有3个选项。
 
-
+1. **移动到黑曜石垃圾桶** - 文件将被移动到黑曜石保险库下的`.trash`。
+2. **移动到系统垃圾箱** - 文件将被移动到操作系统垃圾箱。
+3. **永久删除** - 文件将被永久销毁。你将不能再恢复了
 
 ## 开发
 
@@ -93,5 +95,6 @@ Please make sure that you select the destination for the deleted images under "C
 
 - 国外捐赠：https://ko-fi.com/nathanielll
 
-<a href='https://ko-fi.com/J3J6IL7MY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
+
+<a href='https://ko-fi.com/J3J6IL7MY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
