@@ -45,8 +45,6 @@ This plugin allows you to quickly remove image attachments and referenced links 
 
 
 
-........
-
 ### Install from brat
 
 👦 add  `martinniee/Obsidian-fast-image-cleaner` to BRAT
