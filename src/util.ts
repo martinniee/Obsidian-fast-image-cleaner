@@ -121,14 +121,10 @@ export const getAllImages = (): TFile[] => {
 export const isRemoveImage = (imageName: string): [boolean, string[]] => {
 	const currentMd = app.workspace.getActiveFile() as TFile;
 	const de_img = getImageFileByName(currentMd, imageName) as TFile;
-	if (de_img == undefined) {
-		new Notice(` 1111`);
-	}
 	const md_path: string[] = [];
 	let cur_md_path = "";
 	let ref_num = 0;
 	const resolvedLinks = app.metadataCache.resolvedLinks;
-	le.log("de_img path--------" + de_img.path);
 	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
 		if (currentMd.path === mdFile) {
 			cur_md_path = currentMd.path;
