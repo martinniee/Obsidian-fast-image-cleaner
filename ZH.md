@@ -57,8 +57,9 @@
 
 
 ### 手动安装
+从 [release](https://github.com/martinniee/Obsidian-fast-image-cleaner/releases) 页面下载最新版本的压缩包文件即可
 
-✋ 下载最新版本。将三个文件（main.js、manifest.json、style.css）提取并放到{{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner文件夹中。
+✋ ~~下载最新版本。将三个文件（main.js、manifest.json、style.css）提取并放到{{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner文件夹中。~~
 
 ## 使用
 
