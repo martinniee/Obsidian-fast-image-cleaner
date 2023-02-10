@@ -18,15 +18,15 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 
 1. 删除图片附件文件及其引用链接
 2. 当同一个图片被引用多次（包含下面给出的两种情况），则会弹出提示窗口，不会直接删除，避免图片被错误删除。弹出窗口有当前引用图片的文档和其他文档引用该图片的文档路径信息，下方有 `close` 按钮和 `remove link` 按钮，点击 `remove link` 按钮可以继续移除**当前文档**中的图片引用链接。
-3. - 情况1：在用一个文档引用同一个多次
+   - 情况1：在用一个文档引用同一个多次
    - 情况2：在多个文档同时引用同一个图片
-4. 支持 markdown 和 wiki 链接风格的链接
-5. 支持 三种不同格式的**内部链接类型** （[详情](https://help.obsidian.md/Linking+notes+and+files/Internal+links)）
-6. - 尽可能简短的形式
+3. 支持 markdown 和 wiki 链接风格的链接
+4. 支持 三种不同格式的**内部链接类型** （[详情](https://help.obsidian.md/Linking+notes+and+files/Internal+links)）
+5. - 尽可能简短的形式
    - 基于当前笔记的相对路径
    - 基于仓库根目录的绝对路径
-7. 支持的图片类型：`jpg, jpeg, png, gif, svg, bmp`
-8. 支持设置图片删除后处理方式：① 移动到系统回收站 ； ②  移动到 obsidian trash ; ③ 永久删除
+6. 支持的图片类型：`jpg, jpeg, png, gif, svg, bmp`
+7. 支持设置图片删除后处理方式：① 移动到系统回收站 ； ②  移动到 obsidian trash ; ③ 永久删除
 
 
 
