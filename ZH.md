@@ -10,7 +10,7 @@
 
 ## 演示
 
-<video src="assets/obsidian插件开发-删除图片插件改进删除方法-20230208-2-ai配音版本.mp4"></video>
+https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-a1b6-32efee1fd396.mp4
 
 
 
