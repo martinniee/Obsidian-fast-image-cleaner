@@ -43,7 +43,7 @@ This plugin allows you to quickly remove image attachments and referenced links 
 
 ### Install from plugin marketplace
 
-
+...
 
 ### Install from brat
 
