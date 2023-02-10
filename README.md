@@ -19,17 +19,17 @@ This plugin allows you to quickly remove image attachments and referenced links 
 
 ## Features
 
-- Remove image attachment files and their referencing links
-- When the same image is referenced twice or more, a popup window will appear and it will not be deleted directly to avoid the image being deleted by mistake. pop-up window with the current reference to the image of the document and other documents referencing the image of the document path information, the bottom `close` button and `remove link` button, click `remove link` button can continue to remove **current document** in the image reference link.
+1. Remove image attachment files and their referencing links
+2. When the same image is referenced twice or more, a popup window will appear and it will not be deleted directly to avoid the image being deleted by mistake. pop-up window with the current reference to the image of the document and other documents referencing the image of the document path information, the bottom `close` button and `remove link` button, click `remove link` button can continue to remove **current document** in the image reference link.
   - Case 1: the same document is referenced multiple times in a single document
   - Case 2: the same image is referenced in multiple documents at the same time
-- Support markdown and wiki link style links
-- Support for three different formats of **Internal link types** ([details](https://help.obsidian.md/Linking+notes+and+files/Internal+links))
+3. Support markdown and wiki link style links
+4. Support for three different formats of **Internal link types** ([details](https://help.obsidian.md/Linking+notes+and+files/Internal+links))
   - The shortest possible form
   - Relative path based on the current notes
   - Absolute path based on the repository root directory
-- Supported image types: `jpg, jpeg, png, gif, svg, bmp`
-- Support for setting how to handle images after deletion: ① Move to system recycle bin; ② Move to obsidian trash; ③ Delete permanently
+5. Supported image types: `jpg, jpeg, png, gif, svg, bmp`
+6. Support for setting how to handle images after deletion: ① Move to system recycle bin; ② Move to obsidian trash; ③ Delete permanently
 
 > 😅A small problem: If the image is in a callout block, the delete button may not be displayed directly. To do so, you can manually press the `blank space` button on your keyboard elsewhere in the document.
 
