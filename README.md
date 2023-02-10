@@ -62,7 +62,7 @@ This plugin allows you to quickly remove image attachments and referenced links 
 
 
 
-删除目的设置
+Deleted Image Destination
 
 ![image-20230209180042264](assets/README-images/image-20230209180042264.png)
 
