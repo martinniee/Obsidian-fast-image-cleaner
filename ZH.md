@@ -10,8 +10,7 @@
 
 ## 演示
 
-<iframe src="//player.bilibili.com/player.html?aid=224246608&bvid=BV1U8411T7VH&cid=1001502086&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
-
+https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=ddac77d9485ee57e18bdf1b8e1b7c728
 
 ## 特性
 
