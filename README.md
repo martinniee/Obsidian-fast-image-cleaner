@@ -51,7 +51,9 @@ This plugin allows you to quickly remove image attachments and referenced links 
 
 ### Manual installation
 
-✋Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner
+go [release](https://github.com/martinniee/Obsidian-fast-image-cleaner/releases) page and download  latest version zip  package
+
+✋~~Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner~~
 
 ## Use
 
