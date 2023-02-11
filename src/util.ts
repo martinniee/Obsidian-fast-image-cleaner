@@ -180,10 +180,7 @@ export const getAllImages = (): TFile[] => {
  */
 export const isRemoveImage = (imageName: string): [boolean,string[]] => {
     const currentMd = app.workspace.getActiveFile() as TFile;
-    const de_img = getImageFileByName(currentMd,imageName) as TFile;
-    if(de_img == undefined){
-        new Notice(` 1111`);
-    }
+    const de_img = getImageFileByName(currentMd,imageName) as TFile | undefined;
     // 定义一个数组保存md文档信息
     const md_path: string[] = [];
     let cur_md_path = '';
@@ -204,7 +201,7 @@ export const isRemoveImage = (imageName: string): [boolean,string[]] => {
                 md_path.unshift(cur_md_path)
             }
             for (const [filePath, nr] of Object.entries(links)) {
-                if (de_img.path === filePath) {
+                if (de_img?.path === filePath) {
                     ref_num++;
                     if (nr > 1) {
                         // 说明当前文档引用同一个图片两次
@@ -275,9 +272,6 @@ export const deleteImg = (targetImg: HTMLImageElement, imageName: string, plugin
             const thisURL = new URL(imageUrl);
             const currentMd = app.workspace.getActiveFile() as TFile;
             file =  getImageFileByName(currentMd,imageName) as TFile;
-            if(file == undefined ){
-                console.error(" cannot get image file ")
-            }
             const Proto = thisURL.protocol;
             switch (Proto) {
                 case "app:":

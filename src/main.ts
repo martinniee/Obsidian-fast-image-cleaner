@@ -69,7 +69,8 @@ export default class NathanDeleteImage extends Plugin {
 				document,
 				"click" as keyof HTMLElementEventMap,
 				".btn-delete",
-				this.onClick.bind(this)
+				this.onClick.bind(this),
+				false,
 			)
 		);
 	}
