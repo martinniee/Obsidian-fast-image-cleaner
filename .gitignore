@@ -12,9 +12,6 @@ node_modules
 # They should be uploaded to GitHub releases instead.
 main.js
 
-# Don't include the log.md
-
-log.md
 
 # Exclude sourcemaps
 *.map
