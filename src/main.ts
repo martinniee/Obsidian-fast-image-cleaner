@@ -1,15 +1,14 @@
-import {  Plugin,TFile} from 'obsidian';
-import { NathanDeleteImageSettingsTab } from './settings';
-import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from './settings';
-import * as Util from './util';
-import { LogsModal } from './modals';
+import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
+import { NathanDeleteImageSettingsTab } from "./settings";
+import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from "./settings";
+import * as Util from "./util";
+import { LogsModal } from "./modals";
 
-let img_target: HTMLImageElement;
 
 
 interface Listener {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this: Document, ev: Event): any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	(this: Document, ev: Event): any;
 }
 
 export default class NathanDeleteImage extends Plugin {
@@ -69,12 +68,20 @@ export default class NathanDeleteImage extends Plugin {
 				document,
 				"click" as keyof HTMLElementEventMap,
 				".btn-delete",
-				this.onClick.bind(this),
-				false,
+				this.onClick.bind(this)
+			)
+		);
+		// 注册文档，给图片添加右键菜单事件
+		this.register(
+			this.onElement(
+				document,
+				"contextmenu" as keyof HTMLElementEventMap,
+				"img",
+				this.onClick.bind(this)
 			)
 		);
 	}
-	
+
 	// 加载插件选项 设置
 	async loadSettings() {
 		this.settings = Object.assign(
@@ -87,7 +94,7 @@ export default class NathanDeleteImage extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
-	
+
 	/**
 	 * 鼠标点击事件
 	 */
@@ -95,25 +102,71 @@ export default class NathanDeleteImage extends Plugin {
 		event.preventDefault();
 		// event.target 获取鼠标事件的目标元素
 		const target = event.target as Element;
+		const currentMd = app.workspace.getActiveFile() as TFile;
 		const nodeType = target.localName;
-		let del_btn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
+		let img_target: HTMLImageElement;
+		const menu = new Menu();
+		let imgBaseName: string;
+		let del_btn: HTMLButtonElement = document.createElement(
+			"button"
+		) as HTMLButtonElement;
 		// 当目标元素（nodeType）为 button, svg 或 path时，调用button绑定的监听事件，删除图片
-		if(nodeType === "button" || nodeType === "svg" || nodeType === "path"){
+		if (
+			nodeType === "button" ||
+			nodeType === "svg" ||
+			nodeType === "path"
+		) {
 			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
-			img_target = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
-            const currentMd = app.workspace.getActiveFile() as TFile;
-			const imgBaseName = img_target.parentElement?.getAttribute("src") as string;
-			
+			img_target = del_btn.parentNode?.querySelector(
+				"img"
+			) as HTMLImageElement;
+			imgBaseName = img_target.parentElement?.getAttribute(
+				"src"
+			) as string;
+
 			// console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
-			// console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);			
-			if(Util.isRemoveImage(imgBaseName as string)[0] as boolean){
-				Util.deleteImg(img_target,imgBaseName as string,this);
-			}else{
-				const logs: string[] = Util.isRemoveImage(imgBaseName as string)[1] as string[];
-				const modal = new LogsModal(currentMd,imgBaseName,logs, this.app);
+			// console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);
+			if (Util.isRemoveImage(imgBaseName)[0] as boolean) {
+				Util.deleteImg(img_target, imgBaseName, this);
+			} else {
+				const logs: string[] = Util.isRemoveImage(
+					imgBaseName
+				)[1] as string[];
+				const modal = new LogsModal(
+					currentMd,
+					imgBaseName,
+					logs,
+					this.app
+				);
 				modal.open();
 			}
 		}
+		if (nodeType === "img") {
+			menu.addItem((item: MenuItem) =>
+				item
+					.setIcon("trash-2")
+					.setTitle("clear image and referenced link")
+					.onClick(async () => {
+						try {
+							if (Util.isRemoveImage(imgBaseName)[0] as boolean) {
+								Util.deleteImg(img_target, imgBaseName, this);
+							} else {
+								const logs: string[] = Util.isRemoveImage(
+									imgBaseName
+								)[1] as string[];
+								const modal = new LogsModal(
+									currentMd,
+									imgBaseName,
+									logs,
+									this.app
+								);
+								modal.open();
+							}
+						} catch {
+							new Notice("Error, could not clear the image!");
+						}
+					})
+			);
+		}
 	}
 }
-
