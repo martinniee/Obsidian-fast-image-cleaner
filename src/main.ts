@@ -29,18 +29,6 @@ export default class NathanDeleteImage extends Plugin {
 				this.registerDocument(window.document);
 			}
 		);
-		app.workspace.on("file-open", () => {
-			Util.clearAllDelBtns();
-			Util.addDelBtn(Util.getAllImgDivs());
-		});
-		app.workspace.on("editor-change", () => {
-			Util.clearAllDelBtns();
-			Util.addDelBtn(Util.getAllImgDivs());
-		});
-		app.workspace.on("active-leaf-change", () => {
-			Util.clearAllDelBtns();
-			Util.addDelBtn(Util.getAllImgDivs());
-		});
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
@@ -63,14 +51,6 @@ export default class NathanDeleteImage extends Plugin {
 	}
 	// 注册文档，删除图片的按钮点击事件
 	registerDocument(document: Document) {
-		this.register(
-			this.onElement(
-				document,
-				"click" as keyof HTMLElementEventMap,
-				".btn-delete",
-				this.onClick.bind(this)
-			)
-		);
 		// 注册文档，给图片添加右键菜单事件
 		this.register(
 			this.onElement(
@@ -122,41 +102,6 @@ export default class NathanDeleteImage extends Plugin {
 		const menu = new Menu();
 		const RegImageName = new RegExp("(?<=\\/)[^\\/]*\\.\\w+", "gm");
 		let imgBaseName: string;
-		let del_btn: HTMLButtonElement = document.createElement(
-			"button"
-			) as HTMLButtonElement;
-		// 当目标元素（nodeType）为 button, svg 或 path时，调用button绑定的监听事件，删除图片
-		if (
-			nodeType === "button" ||
-			nodeType === "svg" ||
-			nodeType === "path"
-			) {
-			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
-			const img_target = del_btn.parentNode?.querySelector(
-				"img"
-			) as HTMLImageElement;
-			imgBaseName = img_target.parentElement?.getAttribute(
-				"src"
-			) as string;
-			imgBaseName = (imgBaseName.match(RegImageName) as string[])[0];
-
-			// console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
-			// console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);
-			if (Util.isRemoveImage(imgBaseName)[0] as boolean) {
-				Util.deleteImg(img_target, imgBaseName, this);
-			} else {
-				const logs: string[] = Util.isRemoveImage(
-					imgBaseName
-				)[1] as string[];
-				const modal = new LogsModal(
-					currentMd,
-					imgBaseName,
-					logs,
-					this.app
-				);
-				modal.open();
-			}
-		}
 		if (nodeType === "img") {
 			const imgPath = target.parentElement?.getAttribute("src") as string;
 			imgBaseName = (imgPath.match(RegImageName) as string[])[0];
