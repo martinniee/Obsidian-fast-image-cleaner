@@ -1,26 +1,26 @@
-import NathanDeleteImage from './main';
+import NathanDeleteAttachment from './main';
 import { PluginSettingTab, Setting, App } from 'obsidian';
 
 
 // 插件选项的接口
-export interface NathanDeleteImageSettings {
+export interface NathanDeleteAttactmentSettings {
     deleteOption: string;
     logsModal: boolean;
 }
 
-export const DEFAULT_SETTINGS: NathanDeleteImageSettings = {
+export const DEFAULT_SETTINGS: NathanDeleteAttactmentSettings = {
     deleteOption: '.trash',
     logsModal: true,
 
 };
 
 // 定义插件选项类
-export class NathanDeleteImageSettingsTab extends PluginSettingTab {
+export class NathanDeleteAttactmentSettingsTab extends PluginSettingTab {
     // 将插件类作为插件选项类的属性
-    plugin: NathanDeleteImage;
+    plugin: NathanDeleteAttachment;
 
     // 插件选项结构体
-    constructor(app: App, plugin: NathanDeleteImage) {
+    constructor(app: App, plugin: NathanDeleteAttachment) {
         super(app, plugin);
         this.plugin = plugin;
     }
@@ -29,12 +29,12 @@ export class NathanDeleteImageSettingsTab extends PluginSettingTab {
     display(): void {
         const {containerEl}  = this;
         containerEl.empty();
-        containerEl.createEl('h2', { text: 'Fast Image Cleaner Settings' });
+        containerEl.createEl('h2', { text: 'Fast Attachment Cleaner Settings' });
 
-        // 创建一个控制删除的图片目的地的选项
+        // 创建一个控制删除的附件目的地的选项
         new Setting(containerEl)
-            .setName('Deleted Image Destination')
-            .setDesc('Select where you want images to be moved once they are deleted')
+            .setName('Deleted Attachment Destination')
+            .setDesc('Select where you want Attachments to be moved once they are deleted')
             .addDropdown((dropdown) => {
                 dropdown.addOption('permanent', 'Delete Permanently');
                 dropdown.addOption('.trash', 'Move to Obsidian Trash');

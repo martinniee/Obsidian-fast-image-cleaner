@@ -1,0 +1,9 @@
+.fast-attachment-cleaner-center-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fast-attachment-cleaner-log{
+    margin-bottom: 13px;
+    margin-top: 5px;
+}

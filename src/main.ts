@@ -1,6 +1,6 @@
 import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
-import { NathanDeleteImageSettingsTab } from "./settings";
-import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from "./settings";
+import { NathanDeleteAttactmentSettingsTab } from "./settings";
+import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
 import { LogsModal } from "./modals";
 
@@ -11,14 +11,14 @@ interface Listener {
 	(this: Document, ev: Event): any;
 }
 
-export default class NathanDeleteImage extends Plugin {
+export default class NathanDeletefile extends Plugin {
 	// 将插件选项作为 插件主类的属性
-	settings: NathanDeleteImageSettings;
+	settings: NathanDeleteAttactmentSettings;
 	// 当插件启用后
 	async onload() {
-		console.log("Fast Image Cleaner plugin loaded...");
+		console.log("Fast file Cleaner plugin loaded...");
 		// 添加插件选项
-		this.addSettingTab(new NathanDeleteImageSettingsTab(this.app, this));
+		this.addSettingTab(new NathanDeleteAttactmentSettingsTab(this.app, this));
 		// 加载插件选项
 		await this.loadSettings();
 		this.registerDocument(document); // 调用注册文档方法
@@ -36,7 +36,7 @@ export default class NathanDeleteImage extends Plugin {
 	}
 	// 当插件禁用后
 	onunload() {
-		console.log("Fast Image Cleaner plugin unloaded...");
+		console.log("Fast file Cleaner plugin unloaded...");
 	}
 
 	onElement(
@@ -49,14 +49,14 @@ export default class NathanDeleteImage extends Plugin {
 		el.on(event, selector, listener, options);
 		return () => el.off(event, selector, listener, options);
 	}
-	// 注册文档，删除图片的按钮点击事件
+	// 注册文档，删除附件的按钮点击事件
 	registerDocument(document: Document) {
-		// 注册文档，给图片添加右键菜单事件
+		// 注册文档，给附件添加右键菜单事件
 		this.register(
 			this.onElement(
 				document,
 				"contextmenu" as keyof HTMLElementEventMap,
-				"img",
+				"img, iframe, video, div.file-embed-title",
 				this.onClick.bind(this)
 			)
 		);
@@ -90,50 +90,54 @@ export default class NathanDeleteImage extends Plugin {
 			)
 		);
 	}
+
+	
+
+
 	/**
 	 * 鼠标点击事件
 	 */
 	onClick(event: MouseEvent) {
 		event.preventDefault();
 		// event.target 获取鼠标事件的目标元素
-		const target = event.target as Element;
+		const target = event.target as HTMLElement;
 		const currentMd = app.workspace.getActiveFile() as TFile;
 		const nodeType = target.localName;
 		const menu = new Menu();
-		const RegImageName = new RegExp("(?<=\\/)[^\\/]*\\.\\w+", "gm");
-		let imgBaseName: string;
-		if (nodeType === "img") {
+		const RegFileBaseName = new RegExp("(?<=\\/)[^\\/]*\\.\\w+", "gm");
+		let FileBaseName: string;
+		if (nodeType === "img" || nodeType === "iframe" || nodeType === "video" || (nodeType === 'div' && target.className === 'file-embed-title') ) {
 			const imgPath = target.parentElement?.getAttribute("src") as string;
-			imgBaseName = (imgPath.match(RegImageName) as string[])[0];
+			FileBaseName = (imgPath.match(RegFileBaseName) as string[])[0];
 			menu.addItem((item: MenuItem) =>
 				item
 					.setIcon("trash-2")
-					.setTitle("clear image and referenced link")
+					.setTitle("clear file and referenced link")
 					.setChecked(true)
 					.onClick(async () => {
 						try {
-							if (Util.isRemoveImage(imgBaseName)[0] as boolean) {
-								Util.deleteImg(target as HTMLImageElement, imgBaseName, this);
+							if (Util.IsRemove(FileBaseName)[0] as boolean) {
+								Util.ClearAttachment(FileBaseName, this);
 							} else {
-								const logs: string[] = Util.isRemoveImage(
-									imgBaseName
+								const logs: string[] = Util.IsRemove(
+									FileBaseName
 								)[1] as string[];
 								const modal = new LogsModal(
 									currentMd,
-									imgBaseName,
+									FileBaseName,
 									logs,
 									this.app
 								);
 								modal.open();
 							}
 						} catch {
-							new Notice("Error, could not clear the image!");
+							new Notice("Error, could not clear the file!");
 						}
 					})
 			);
 		}
 		this.registerEscapeButton(menu);
 		menu.showAtPosition({ x: event.pageX, y: event.pageY-40 });
-		this.app.workspace.trigger("NL-fast-image-cleaner:contextmenu", menu);
+		this.app.workspace.trigger("NL-fast-file-cleaner:contextmenu", menu);
 	}
 }
