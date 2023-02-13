@@ -13,7 +13,7 @@ If your plugin does not need CSS, delete this file.
     top: 14px;
     padding: 0;
     text-align: center;
-    background-color: transparent;
+    background-color: #e1dddd69;
     box-shadow: none;
     opacity: 0;
 }
