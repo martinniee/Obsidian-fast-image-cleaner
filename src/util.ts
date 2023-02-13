@@ -220,16 +220,15 @@ export const isRemoveImage = (imageName: string): [boolean,string[]] => {
 
 
 /**
-*	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
-*
-*
-*  @param currentMd  当前需要被删除的图片所在的markdown文件
-   @param currentMd  当前需要被删除的图片名 name.extension
-*/
+ * 	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
+ * 
+  	@param currentMd  当前需要被删除的图片所在的markdown文件
+  	@param currentMd  当前需要被删除的图片名 name.extension
+ *  @returns  imageFile
+ */
 
 export const getImageFileByName = (currentMd: TFile, imageName: string): TFile | undefined => {
 	const resolvedLinks = app.metadataCache.resolvedLinks;
-    // let imageFile: TFile;
 	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
 		if (currentMd.path === mdFile) {
 			for (const [filePath, nr] of Object.entries(links)) {
@@ -246,10 +245,7 @@ export const getImageFileByName = (currentMd: TFile, imageName: string): TFile |
 				}
 			}
 		}
-	} 
-    // return imageFile;
-    // console.log("file path" + imageFile.parent);
-    
+	}  
 };
 
 /**
