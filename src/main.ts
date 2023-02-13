@@ -94,7 +94,22 @@ export default class NathanDeleteImage extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
-
+	registerEscapeButton(menu: Menu, document: Document = activeDocument) {
+		menu.register(
+			this.onElement(
+				document,
+				"keydown" as keyof HTMLElementEventMap,
+				"*",
+				(e: KeyboardEvent) => {
+					if (e.key === "Escape") {
+						e.preventDefault();
+						e.stopPropagation();
+						menu.hide();
+					}
+				}
+			)
+		);
+	}
 	/**
 	 * 鼠标点击事件
 	 */
@@ -104,25 +119,26 @@ export default class NathanDeleteImage extends Plugin {
 		const target = event.target as Element;
 		const currentMd = app.workspace.getActiveFile() as TFile;
 		const nodeType = target.localName;
-		let img_target: HTMLImageElement;
 		const menu = new Menu();
+		const RegImageName = new RegExp("(?<=\\/)[^\\/]*\\.\\w+", "gm");
 		let imgBaseName: string;
 		let del_btn: HTMLButtonElement = document.createElement(
 			"button"
-		) as HTMLButtonElement;
+			) as HTMLButtonElement;
 		// 当目标元素（nodeType）为 button, svg 或 path时，调用button绑定的监听事件，删除图片
 		if (
 			nodeType === "button" ||
 			nodeType === "svg" ||
 			nodeType === "path"
-		) {
+			) {
 			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
-			img_target = del_btn.parentNode?.querySelector(
+			const img_target = del_btn.parentNode?.querySelector(
 				"img"
 			) as HTMLImageElement;
 			imgBaseName = img_target.parentElement?.getAttribute(
 				"src"
 			) as string;
+			imgBaseName = (imgBaseName.match(RegImageName) as string[])[0];
 
 			// console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
 			// console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);
@@ -142,14 +158,17 @@ export default class NathanDeleteImage extends Plugin {
 			}
 		}
 		if (nodeType === "img") {
+			const imgPath = target.parentElement?.getAttribute("src") as string;
+			imgBaseName = (imgPath.match(RegImageName) as string[])[0];
 			menu.addItem((item: MenuItem) =>
 				item
 					.setIcon("trash-2")
 					.setTitle("clear image and referenced link")
+					.setChecked(true)
 					.onClick(async () => {
 						try {
 							if (Util.isRemoveImage(imgBaseName)[0] as boolean) {
-								Util.deleteImg(img_target, imgBaseName, this);
+								Util.deleteImg(target as HTMLImageElement, imgBaseName, this);
 							} else {
 								const logs: string[] = Util.isRemoveImage(
 									imgBaseName
@@ -168,5 +187,8 @@ export default class NathanDeleteImage extends Plugin {
 					})
 			);
 		}
+		this.registerEscapeButton(menu);
+		menu.showAtPosition({ x: event.pageX, y: event.pageY });
+		this.app.workspace.trigger("NL-fast-image-cleaner:contextmenu", menu);
 	}
 }

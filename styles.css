@@ -14,6 +14,7 @@ If your plugin does not need CSS, delete this file.
     padding: 0;
     text-align: center;
     background-color: transparent;
+    box-shadow: none;
     opacity: 0;
 }
 .internal-embed .btn-delete svg ,
