@@ -223,7 +223,7 @@ export const isRemoveImage = (imageName: string): [boolean,string[]] => {
  * 	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
  * 
   	@param currentMd  当前需要被删除的图片所在的markdown文件
-  	@param currentMd  当前需要被删除的图片名 name.extension
+  	@param imageName  当前需要被删除的图片名 name.extension
  *  @returns  imageFile
  */
 
