@@ -188,7 +188,7 @@ export default class NathanDeleteImage extends Plugin {
 			);
 		}
 		this.registerEscapeButton(menu);
-		menu.showAtPosition({ x: event.pageX, y: event.pageY });
+		menu.showAtPosition({ x: event.pageX, y: event.pageY-40 });
 		this.app.workspace.trigger("NL-fast-image-cleaner:contextmenu", menu);
 	}
 }
