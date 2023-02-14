@@ -1,3 +1,6 @@
+import { TFile } from "obsidian";
+import * as Util from "../util";
+
 /**
  * 获取实时预览模式下 内容区的所有图片div (.view-content .markdown-source-view.is-live.preview)
  * 通过这个div结合 addDelBtn( getAllImgDivs )来确定要添加的按钮的位置实现删除按钮的添加
@@ -40,4 +43,30 @@ export const clearAllDelBtns = () => {
     Array.from(btn_dels).forEach( (btn_del) => {
         btn_del.parentNode?.removeChild(btn_del);
     });
+}
+/**
+     * 当点击删除按钮时，处理删除图片事件
+     * 
+     * @param target  鼠标事件的目标元素
+     * @param fileBaseName  附件路径的basename
+     * @returns 
+     */
+export const clearImgByDelBnt = (target: HTMLElement, fileBaseName: string) => {
+		// const currentMd = app.workspace.getActiveFile() as TFile;
+		// let del_btn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
+        const  del_btn = target.closest(".btn-delete") as HTMLButtonElement;
+        const imgTarget = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
+        const currentMd = app.workspace.getActiveFile() as TFile;
+        const imgBaseName = imgTarget.parentElement?.getAttribute("src") as string;
+
+        Util.handlerDelFile(imgBaseName,currentMd);
+        // console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
+        // console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);			
+        // if (Util.isRemoveImage(imgBaseName as string)[0] as boolean) {
+        //     Util.deleteImg(imgTarget, imgBaseName as string, this);
+        // } else {
+        //     const logs: string[] = Util.isRemoveImage(imgBaseName as string)[1] as string[];
+        //     const modal = new LogsModal(currentMd, imgBaseName, logs, this.app);
+        //     modal.open();
+        // }
 }
