@@ -3,7 +3,6 @@ import { NathanDeleteAttactmentSettingsTab } from "./settings";
 import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
 import * as addDelBntHandler from "./handler/addDelBntHandler";
-import { LogsModal } from "./modals";
 import { TargetName } from "./type/targetType";
 
 
@@ -128,28 +127,16 @@ export default class NathanDeletefile extends Plugin {
 					.setChecked(true)
 					.onClick(async () => {
 						try {
-							if (Util.IsRemove(FileBaseName)[0] as boolean) {
-								Util.ClearAttachment(FileBaseName, this);
-							} else {
-								const logs: string[] = Util.IsRemove(
-									FileBaseName
-								)[1] as string[];
-								const modal = new LogsModal(
-									currentMd,
-									FileBaseName,
-									logs,
-									this.app
-								);
-								modal.open();
-							}
+							Util.handlerDelFile(FileBaseName, currentMd,this);
 						} catch {
 							new Notice("Error, could not clear the file!");
 						}
 					})
-			);
+		);
 	}
 	
 
+	
 
 	/**
 	 * 鼠标点击事件
@@ -164,22 +151,24 @@ export default class NathanDeletefile extends Plugin {
 		const menu = new Menu();
 		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
 		// imgPath 附件所在元素的父级div上的src属性值，为附件路径，对应内链三种类型
-		const imgPath = target.parentElement?.getAttribute("src") as string;
-		const FileBaseName = (imgPath.match(RegFileBaseName) as string[])[1];
-
+		let imgPath= '';
+		
 		const delBntTarget = ['button', 'path', 'svg'];
 		const delTarget= ['img', 'iframe', 'video','div'];
 		const targetName: TargetName = {delBntTarget,delTarget};
+
 		// 当使用右键方式删除时
 		if(targetName.delTarget.includes(nodeType)){
+			imgPath =  target.parentElement?.getAttribute("src") as string;
+			const FileBaseName = (imgPath?.match(RegFileBaseName) as string[])[1];
 			if(target.className === 'file-embed-title'){
 				// 当是嵌入附件类型是文件 file时
 				this.addMenu(menu,FileBaseName,currentMd);
 			}
 			this.addMenu(menu,FileBaseName,currentMd);
 		}else if(targetName.delBntTarget.includes(nodeType)){
-		// 使用删除按钮删除时
-			addDelBntHandler.clearImgByDelBnt(target,FileBaseName);
+			// 使用删除按钮删除时
+			addDelBntHandler.clearImgByDelBnt(target,currentMd,this);
 		}
 		this.registerEscapeButton(menu);
 		menu.showAtPosition({ x: event.pageX, y: event.pageY-40 });

@@ -49,18 +49,17 @@ export const clearAllDelBtns = () => {
      * 当点击删除按钮时，处理删除图片事件
      * 
      * @param target  鼠标事件的目标元素
-     * @param fileBaseName  附件路径的basename
      * @param plugin  NathanDeletefile
      * 
      * @returns 
      */
-export const clearImgByDelBnt = (target: HTMLElement, fileBaseName: string,plugin: NathanDeletefile) => {
+export const clearImgByDelBnt = (target: HTMLElement, currentMd: TFile,plugin: NathanDeletefile) => {
 		// const currentMd = app.workspace.getActiveFile() as TFile;
-		// let del_btn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
-        const  del_btn = target.closest(".btn-delete") as HTMLButtonElement;
-        const imgTarget = del_btn.parentNode?.querySelector("img") as HTMLImageElement;
-        const currentMd = app.workspace.getActiveFile() as TFile;
-        const imgBaseName = imgTarget.parentElement?.getAttribute("src") as string;
-
-        Util.handlerDelFile(imgBaseName,currentMd,plugin);
+		// let delBtn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
+        const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
+        const  delBtn = target.closest(".btn-delete") as HTMLButtonElement;
+        const imgTarget = delBtn.parentNode?.querySelector("img") as HTMLImageElement;
+        const imgSrcPath = imgTarget.parentElement?.getAttribute("src") as string;
+        const FileBaseName = (imgSrcPath?.match(RegFileBaseName) as string[])[1];
+        Util.handlerDelFile(FileBaseName,currentMd,plugin);
 }
