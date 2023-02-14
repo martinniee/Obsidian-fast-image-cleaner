@@ -1,5 +1,5 @@
 import { TFile, Notice,} from "obsidian";
-import NathanDeletefile from "./main";
+import NathanDeletefile from './main';
 import { LogsModal } from "./modals";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
@@ -198,7 +198,7 @@ export const getFileByBaseName = (
  */
 export const ClearAttachment = (
 	FileBaseName: string,
-	plugin: NathanDeleteImage
+	plugin: NathanDeletefile
 ) => {
 	const deleteOption = plugin.settings.deleteOption;
 	const currentMd = app.workspace.getActiveFile() as TFile;
@@ -225,8 +225,7 @@ export const ClearAttachment = (
 	 * @param FileBaseName 
 	 * @param currentMd 
 	 */
-export const handlerDelFile = (FileBaseName: string, currentMd: TFile)=> {
-	const plugin = NathanDeletefile;
+export const handlerDelFile = (FileBaseName: string, currentMd: TFile, plugin: NathanDeletefile)=> {
 
 	if (IsRemove(FileBaseName)[0] as boolean) {
 		ClearAttachment(FileBaseName, plugin);
