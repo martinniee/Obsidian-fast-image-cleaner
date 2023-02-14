@@ -1,4 +1,4 @@
-import NathanDeleteAttachment from './main';
+import NathanDeletefile from './main';
 import { PluginSettingTab, Setting, App } from 'obsidian';
 
 
@@ -17,10 +17,10 @@ export const DEFAULT_SETTINGS: NathanDeleteAttactmentSettings = {
 // 定义插件选项类
 export class NathanDeleteAttactmentSettingsTab extends PluginSettingTab {
     // 将插件类作为插件选项类的属性
-    plugin: NathanDeleteAttachment;
+    plugin: NathanDeletefile;
 
     // 插件选项结构体
-    constructor(app: App, plugin: NathanDeleteAttachment) {
+    constructor(app: App, plugin: NathanDeletefile) {
         super(app, plugin);
         this.plugin = plugin;
     }
