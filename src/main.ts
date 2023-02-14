@@ -113,33 +113,15 @@ export default class NathanDeletefile extends Plugin {
 		);
 	}
 
-	
-	
-
-
 	/**
-	 * 鼠标点击事件
+	 * 设置菜单按钮，并设置点击事件
+	 * 
+	 * @param menu 
+	 * @param FileBaseName 
+	 * @param currentMd 
 	 */
-	onClick(event: MouseEvent) {
-		event.preventDefault();
-		// event.target 获取鼠标事件的目标元素
-		const target = event.target as HTMLElement;
-		const currentMd = app.workspace.getActiveFile() as TFile;
-
-		const nodeType = target.localName;
-		const menu = new Menu();
-		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
-		let FileBaseName: string;
-
-		const delBntTarget = ['button', 'path', 'svg'];
-		const delTarget= ['img', 'iframe', 'video','div'];
-		const targetName: TargetName = {delBntTarget,delTarget};
-
-
-		if (nodeType === "img" || nodeType === "iframe" || nodeType === "video" || (nodeType === 'div' && target.className === 'file-embed-title') ) {
-			const imgPath = target.parentElement?.getAttribute("src") as string;
-			FileBaseName = (imgPath.match(RegFileBaseName) as string[])[1];
-			menu.addItem((item: MenuItem) =>
+	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile)=>{
+		menu.addItem((item: MenuItem) =>
 				item
 					.setIcon("trash-2")
 					.setTitle("clear file and referenced link")
@@ -165,6 +147,39 @@ export default class NathanDeletefile extends Plugin {
 						}
 					})
 			);
+	}
+	
+
+
+	/**
+	 * 鼠标点击事件
+	 */
+	onClick(event: MouseEvent) {
+		event.preventDefault();
+		// event.target 获取鼠标事件的目标元素
+		const target = event.target as HTMLElement;
+		const currentMd = app.workspace.getActiveFile() as TFile;
+
+		const nodeType = target.localName;
+		const menu = new Menu();
+		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
+		// imgPath 附件所在元素的父级div上的src属性值，为附件路径，对应内链三种类型
+		const imgPath = target.parentElement?.getAttribute("src") as string;
+		const FileBaseName = (imgPath.match(RegFileBaseName) as string[])[1];
+
+		const delBntTarget = ['button', 'path', 'svg'];
+		const delTarget= ['img', 'iframe', 'video','div'];
+		const targetName: TargetName = {delBntTarget,delTarget};
+		// 当使用右键方式删除时
+		if(targetName.delTarget.includes(nodeType)){
+			if(target.className === 'file-embed-title'){
+				// 当是嵌入附件类型是文件 file时
+				this.addMenu(menu,FileBaseName,currentMd);
+			}
+			this.addMenu(menu,FileBaseName,currentMd);
+		}else if(targetName.delBntTarget.includes(nodeType)){
+		// 使用删除按钮删除时
+			addDelBntHandler.clearImgByDelBnt(target,FileBaseName);
 		}
 		this.registerEscapeButton(menu);
 		menu.showAtPosition({ x: event.pageX, y: event.pageY-40 });
