@@ -1,10 +1,10 @@
 {
-	"id": "NL-fast-image-cleaner",
+	"id": "nl-fast-image-cleaner",
 	"name": "Fast Image Cleaner",
 	"version": "0.3.0",
 	"minAppVersion": "1.0.9",
 	"description": "You can quickly delete image(or file,media) attachments and their reference links with the click of a button or right-click menu to adapt to different situations",
 	"author": "Nathaniel",
-	"authorUrl": "https://github.com/martinniee/Obsidian-fast-image-cleaner/",
+	"authorUrl": "https://github.com/martinniee/",
 	"isDesktopOnly": true
 }
