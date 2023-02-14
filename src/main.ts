@@ -4,6 +4,7 @@ import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
 import * as addDelBntHandler from "./handler/addDelBntHandler";
 import { LogsModal } from "./modals";
+import { TargetName } from "./type/targetType";
 
 
 
@@ -112,9 +113,7 @@ export default class NathanDeletefile extends Plugin {
 		);
 	}
 
-	const clearImgByDelBnt = ()={
-
-	}
+	
 	
 
 
@@ -126,10 +125,17 @@ export default class NathanDeletefile extends Plugin {
 		// event.target 获取鼠标事件的目标元素
 		const target = event.target as HTMLElement;
 		const currentMd = app.workspace.getActiveFile() as TFile;
+
 		const nodeType = target.localName;
 		const menu = new Menu();
 		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
 		let FileBaseName: string;
+
+		const delBntTarget = ['button', 'path', 'svg'];
+		const delTarget= ['img', 'iframe', 'video','div'];
+		const targetName: TargetName = {delBntTarget,delTarget};
+
+
 		if (nodeType === "img" || nodeType === "iframe" || nodeType === "video" || (nodeType === 'div' && target.className === 'file-embed-title') ) {
 			const imgPath = target.parentElement?.getAttribute("src") as string;
 			FileBaseName = (imgPath.match(RegFileBaseName) as string[])[1];
