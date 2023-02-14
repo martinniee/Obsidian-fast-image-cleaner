@@ -2,6 +2,7 @@ import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
 import { NathanDeleteAttactmentSettingsTab } from "./settings";
 import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
+import * as addDelBntHandler from "./handler/addDelBntHandler";
 import { LogsModal } from "./modals";
 
 
@@ -29,6 +30,18 @@ export default class NathanDeletefile extends Plugin {
 				this.registerDocument(window.document);
 			}
 		);
+		app.workspace.on("file-open", () => {
+			addDelBntHandler.clearAllDelBtns();			
+			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
+		});
+		app.workspace.on("editor-change", () => {
+			addDelBntHandler.clearAllDelBtns();
+			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
+		});
+		app.workspace.on("active-leaf-change", () => {
+			addDelBntHandler.clearAllDelBtns();
+			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
+		});
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
@@ -51,7 +64,15 @@ export default class NathanDeletefile extends Plugin {
 	}
 	// 注册文档，删除附件的按钮点击事件
 	registerDocument(document: Document) {
-		// 注册文档，给附件添加右键菜单事件
+		this.register(
+			this.onElement(
+				document,
+				"click" as keyof HTMLElementEventMap,
+				".btn-delete",
+				this.onClick.bind(this)
+			)
+		);
+		// 注册文档，给图片添加右键菜单事件
 		this.register(
 			this.onElement(
 				document,
@@ -91,6 +112,9 @@ export default class NathanDeletefile extends Plugin {
 		);
 	}
 
+	const clearImgByDelBnt = ()={
+
+	}
 	
 
 
@@ -104,11 +128,11 @@ export default class NathanDeletefile extends Plugin {
 		const currentMd = app.workspace.getActiveFile() as TFile;
 		const nodeType = target.localName;
 		const menu = new Menu();
-		const RegFileBaseName = new RegExp("(?<=\\/)[^\\/]*\\.\\w+", "gm");
+		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
 		let FileBaseName: string;
 		if (nodeType === "img" || nodeType === "iframe" || nodeType === "video" || (nodeType === 'div' && target.className === 'file-embed-title') ) {
 			const imgPath = target.parentElement?.getAttribute("src") as string;
-			FileBaseName = (imgPath.match(RegFileBaseName) as string[])[0];
+			FileBaseName = (imgPath.match(RegFileBaseName) as string[])[1];
 			menu.addItem((item: MenuItem) =>
 				item
 					.setIcon("trash-2")
