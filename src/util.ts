@@ -3,6 +3,23 @@ import NathanDeleteImage from "./main";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
 
+
+
+/**
+ * 移除元素的dom结构从文档中
+ * @param target 需要被移除的元素（img）
+ */
+export const removeImgDom = (target: HTMLElement) => {
+    // 1、获取图片元素父级img_div
+    const img_div: HTMLDivElement = target.parentElement as HTMLDivElement;
+    // 2、获取img_div的父级div content_container
+    const content_container: HTMLDivElement = target.parentElement
+        ?.parentElement as HTMLDivElement;
+    // 3、删除img_div元素
+    content_container.removeChild(img_div);
+};
+
+
 /**
  * 函数表示从目标字符串origin_str中去除根据正则表达式regex匹配的出来的文本
  * @param origin_str     原始目标字符串
@@ -21,11 +38,11 @@ const trimFromRegExp = (origin_str: string, regex: RegExp): string => {
 };
 
 /**
- * 移除curMd引用链接
- *
- *
- * @param imagePath  curMd的链接路径，不包括父级目录，为 curMd文件名.后缀 形式
- * @param mdFile  需要删除的curMd所在的md文件
+ * 移除图片引用链接
+ * 
+ * 
+ * @param imagePath  图片的链接路径，不包括父级目录，为 图片文件名.后缀 形式
+ * @param mdFile  需要删除的图片所在的md文件
  */
 export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
 	const origin_filecontents = await app.vault.read(mdFile);
@@ -140,7 +157,7 @@ export const IsRemove = (FileBaseName: string): [boolean, string[]] => {
 };
 
 /**
- * 	通过当前md文件和curMd名 获取 curMd文件对象   ，类型为TFile
+ * 	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
  * 
   	@param currentMd  当前需要被删除的curMd所在的markdown文件
   	@param FileBaseName  当前需要被删除的curMd名 name.extension
