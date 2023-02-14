@@ -1,12 +1,4 @@
-/*
-
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
-
-If your plugin does not need CSS, delete this file.
-
-*/
-
+/* 图片的删除按钮 */
 .internal-embed .btn-delete{
     position: absolute;
     left: 0;
@@ -14,6 +6,7 @@ If your plugin does not need CSS, delete this file.
     padding: 0;
     text-align: center;
     background-color: transparent;
+    box-shadow: transparent;
     opacity: 0;
 }
 .internal-embed .btn-delete svg ,
@@ -26,12 +19,14 @@ If your plugin does not need CSS, delete this file.
 .internal-embed:hover .btn-delete {
 	opacity: 1;
 }
-.fast-image-cleaner-center-wrapper{
+
+
+.fast-attachment-cleaner-center-wrapper{
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.fast-image-cleaner-log{
+.fast-attachment-cleaner-log{
     margin-bottom: 13px;
     margin-top: 5px;
 }
