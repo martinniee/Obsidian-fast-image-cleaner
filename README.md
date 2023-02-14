@@ -1,73 +1,95 @@
-# Obsidian Sample Plugin
+# Fast Image Cleaner
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+[中文](./ZH.md) / [EN](./README.md)
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+> The following English version was translated by deelp
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+This plugin allows you to quickly remove image attachments and referenced links from your documents in **live view** mode. Mouse over the image and click the delete button.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
-
-## First time developing plugins?
-
-Quick starting guide for new plugin devs:
-
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
-
-## Releasing new releases
-
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
-
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
-
-## Adding your plugin to the community plugin list
-
-- Check https://github.com/obsidianmd/obsidian-releases/blob/master/plugin-review.md
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## How to use
-
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+## Demo
 
 
-## API Documentation
 
-See https://github.com/obsidianmd/obsidian-api
+
+https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-a1b6-32efee1fd396.mp4
+
+
+
+
+<video src="assets/obsidian插件开发-删除图片插件改进删除方法-20230208-2-ai配音版本.mp4"></video>
+
+
+
+
+## Features
+
+1. Remove image attachment files and their referencing links
+2. When the same image is referenced twice or more, a popup window will appear and it will not be deleted directly to avoid the image being deleted by mistake. pop-up window with the current reference to the image of the document and other documents referencing the image of the document path information, the bottom `close` button and `remove link` button, click `remove link` button can continue to remove **current document** in the image reference link.
+   - Case 1: the same document is referenced multiple times in a single document
+   - Case 2: the same image is referenced in multiple documents at the same time
+3. Support markdown and wiki link style links
+4. Support for three different formats of **Internal link types** ([details](https://help.obsidian.md/Linking+notes+and+files/Internal+links))
+
+     - The shortest possible form
+     - Relative path based on the current notes
+     - Absolute path based on the repository root directory
+
+5. Supported image types: `jpg, jpeg, png, gif, svg, bmp`
+
+6. Support for setting how to handle images after deletion: ① Move to system recycle bin; ② Move to obsidian trash; ③ Delete permanently
+> 😅A small problem: If the image is in a callout block, the delete button may not be displayed directly. To do so, you can manually press the `blank space` button on your keyboard elsewhere in the document.
+
+> 😁 This plugin theoretically supports the deletion of any type of attachment file, but I don't need it, so for now it only supports image type files
+
+
+
+## Install
+
+### Install from plugin marketplace
+
+...
+
+### Install from brat
+
+👦 add  `martinniee/Obsidian-fast-image-cleaner` to BRAT
+
+### Manual installation
+
+go [release](https://github.com/martinniee/Obsidian-fast-image-cleaner/releases) page and download  latest version zip  package
+
+✋~~Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner~~
+
+## Use
+
+1. Install and enable the plug-in
+2. In **Live View** mode Mouse over the image and you should see a delete button, click the delete button to delete the image file and remove the reference link from the document
+
+
+
+
+
+Deleted Image Destination
+
+![image-20230209180042264](assets/README-images/image-20230209180042264.png)
+
+Please make sure that you select the destination for the deleted images under "Fast Images Cleaner Settings" tab. You have 3 options:
+
+1. **Move to Obsidian Trash** - Files are going to be moved to the `.trash` under the Obsidian Vault.
+2. **Move to System Trash** - Files are going to be moved to the Operating System trash.
+3. **Permanently Delete** - Files are going to be destroyed permanently. You won't beable to revert back.
+
+
+
+## Development
+
+This plugin follows the structure of the [Obsidian Sample Plugin](https://github.com/obsidianmd/obsidian-sample-plugin) plugin, please see further details there.
+
+
+
+## Support
+
+❤ If you enjoy using Obsidian-Fast-Image-Cleaner, then please support my work by giving me a charge at: https://ko-fi.com/nathanielll
+
+
+
+<a href='https://ko-fi.com/J3J6IL7MY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>

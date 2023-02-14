@@ -1,10 +1,10 @@
 {
 	"id": "NL-fast-image-cleaner",
 	"name": "Fast Image Cleaner",
-	"version": "0.1.0",
-	"minAppVersion": "1.0.3",
+	"version": "0.2.0",
+	"minAppVersion": "1.1.9",
 	"description": "You can quickly clean up image with its referenced link by clicking the delete button",
 	"author": "Nathaniel",
-	"authorUrl": "https://obsidian.md",
-	"isDesktopOnly": false
+	"authorUrl": "https://github.com/martinniee/Obsidian-fast-image-cleaner/",
+	"isDesktopOnly": true
 }
