@@ -3,8 +3,6 @@ import NathanDeleteImage from "./main";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
 
-const delBntTarget = ['button', 'path', 'svg'];
-const delTarget= ['img', 'iframe', 'video','div'];
 
 /**
  * 移除元素的dom结构从文档中
