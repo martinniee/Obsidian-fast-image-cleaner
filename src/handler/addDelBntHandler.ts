@@ -1,4 +1,5 @@
 import { TFile } from "obsidian";
+import NathanDeletefile from "src/main";
 import * as Util from "../util";
 
 /**
@@ -49,9 +50,11 @@ export const clearAllDelBtns = () => {
      * 
      * @param target  鼠标事件的目标元素
      * @param fileBaseName  附件路径的basename
+     * @param plugin  NathanDeletefile
+     * 
      * @returns 
      */
-export const clearImgByDelBnt = (target: HTMLElement, fileBaseName: string) => {
+export const clearImgByDelBnt = (target: HTMLElement, fileBaseName: string,plugin: NathanDeletefile) => {
 		// const currentMd = app.workspace.getActiveFile() as TFile;
 		// let del_btn: HTMLButtonElement = document.createElement('button') as HTMLButtonElement;
         const  del_btn = target.closest(".btn-delete") as HTMLButtonElement;
@@ -59,14 +62,5 @@ export const clearImgByDelBnt = (target: HTMLElement, fileBaseName: string) => {
         const currentMd = app.workspace.getActiveFile() as TFile;
         const imgBaseName = imgTarget.parentElement?.getAttribute("src") as string;
 
-        Util.handlerDelFile(imgBaseName,currentMd);
-        // console.log("parsed image path:  " +   app.vault.getAbstractFileByPath(imgBaseName as string)?.path );
-        // console.log("parsed image path:  " +   parseLinktext( (imgBaseName as string)).path);			
-        // if (Util.isRemoveImage(imgBaseName as string)[0] as boolean) {
-        //     Util.deleteImg(imgTarget, imgBaseName as string, this);
-        // } else {
-        //     const logs: string[] = Util.isRemoveImage(imgBaseName as string)[1] as string[];
-        //     const modal = new LogsModal(currentMd, imgBaseName, logs, this.app);
-        //     modal.open();
-        // }
+        Util.handlerDelFile(imgBaseName,currentMd,plugin);
 }
