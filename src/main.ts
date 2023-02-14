@@ -1,47 +1,55 @@
-import { Plugin, TFile } from "obsidian";
-import { NathanDeleteImageSettingsTab } from "./settings";
-import { NathanDeleteImageSettings, DEFAULT_SETTINGS } from "./settings";
+import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
+import { NathanDeleteAttactmentSettingsTab } from "./settings";
+import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
-import { LogsModal } from "./modals";
+import * as addDelBntHandler from "./handler/addDelBntHandler";
+import { TargetName } from "./type/targetType";
 
-let img_target: HTMLImageElement;
+
 
 interface Listener {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	(this: Document, ev: Event): any;
 }
 
-export default class NathanDeleteImage extends Plugin {
-	settings: NathanDeleteImageSettings;
+export default class NathanDeletefile extends Plugin {
+	// 将插件选项作为 插件主类的属性
+	settings: NathanDeleteAttactmentSettings;
+	// 当插件启用后
 	async onload() {
-		console.log("Fast Image Cleaner plugin loaded...");
-		this.addSettingTab(new NathanDeleteImageSettingsTab(this.app, this));
+		console.log("Fast file Cleaner plugin loaded...");
+		// 添加插件选项
+		this.addSettingTab(new NathanDeleteAttactmentSettingsTab(this.app, this));
+		// 加载插件选项
 		await this.loadSettings();
-		this.registerDocument(document); 
+		this.registerDocument(document); // 调用注册文档方法
 
 		app.workspace.on(
-			"window-open", 
+			"window-open", // 当
 			(workspaceWindow, window) => {
 				this.registerDocument(window.document);
 			}
 		);
 		app.workspace.on("file-open", () => {
-			Util.clearAllDelBtns();
-			Util.addDelBtn(Util.getAllImgDivs());
+			addDelBntHandler.clearAllDelBtns();			
+			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 		});
 		app.workspace.on("editor-change", () => {
-			Util.clearAllDelBtns();
-			Util.addDelBtn(Util.getAllImgDivs());
+			addDelBntHandler.clearAllDelBtns();
+			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 		});
 		app.workspace.on("active-leaf-change", () => {
-			Util.clearAllDelBtns();
-			Util.addDelBtn(Util.getAllImgDivs());
+			addDelBntHandler.clearAllDelBtns();
+			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 		});
+		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
 		);
 	}
+	// 当插件禁用后
 	onunload() {
-		console.log("Fast Image Cleaner plugin unloaded...");
+		console.log("Fast file Cleaner plugin unloaded...");
 	}
 
 	onElement(
@@ -54,6 +62,7 @@ export default class NathanDeleteImage extends Plugin {
 		el.on(event, selector, listener, options);
 		return () => el.off(event, selector, listener, options);
 	}
+	// 注册文档，删除附件的按钮点击事件
 	registerDocument(document: Document) {
 		this.register(
 			this.onElement(
@@ -63,7 +72,18 @@ export default class NathanDeleteImage extends Plugin {
 				this.onClick.bind(this)
 			)
 		);
+		// 注册文档，给图片添加右键菜单事件
+		this.register(
+			this.onElement(
+				document,
+				"contextmenu" as keyof HTMLElementEventMap,
+				"img, iframe, video, div.file-embed-title",
+				this.onClick.bind(this)
+			)
+		);
 	}
+
+	// 加载插件选项 设置
 	async loadSettings() {
 		this.settings = Object.assign(
 			{},
@@ -71,43 +91,87 @@ export default class NathanDeleteImage extends Plugin {
 			await this.loadData()
 		);
 	}
+	// 保存插件选项 设置
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+	registerEscapeButton(menu: Menu, document: Document = activeDocument) {
+		menu.register(
+			this.onElement(
+				document,
+				"keydown" as keyof HTMLElementEventMap,
+				"*",
+				(e: KeyboardEvent) => {
+					if (e.key === "Escape") {
+						e.preventDefault();
+						e.stopPropagation();
+						menu.hide();
+					}
+				}
+			)
+		);
+	}
+
+	/**
+	 * 设置菜单按钮，并设置点击事件
+	 * 
+	 * @param menu 
+	 * @param FileBaseName 
+	 * @param currentMd 
+	 */
+	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile)=>{
+		menu.addItem((item: MenuItem) =>
+				item
+					.setIcon("trash-2")
+					.setTitle("clear file and referenced link")
+					.setChecked(true)
+					.onClick(async () => {
+						try {
+							Util.handlerDelFile(FileBaseName, currentMd,this);
+						} catch {
+							new Notice("Error, could not clear the file!");
+						}
+					})
+		);
+	}
+	
+
+	
+
+	/**
+	 * 鼠标点击事件
+	 */
 	onClick(event: MouseEvent) {
 		event.preventDefault();
-		const target = event.target as Element;
+		// event.target 获取鼠标事件的目标元素
+		const target = event.target as HTMLElement;
+		const currentMd = app.workspace.getActiveFile() as TFile;
+
 		const nodeType = target.localName;
-		let del_btn: HTMLButtonElement = document.createElement(
-			"button"
-		) as HTMLButtonElement;
-		if (
-			nodeType === "button" ||
-			nodeType === "svg" ||
-			nodeType === "path"
-		) {
-			del_btn = target.closest(".btn-delete") as HTMLButtonElement;
-			img_target = del_btn.parentNode?.querySelector(
-				"img"
-			) as HTMLImageElement;
-			const currentMd = app.workspace.getActiveFile() as TFile;
-			const imgBaseName = img_target.parentElement?.getAttribute(
-				"src"
-			) as string;
-			if (Util.isRemoveImage(imgBaseName as string)[0] as boolean) {
-				Util.deleteImg(img_target, imgBaseName as string, this);
-			} else {
-				const logs: string[] = Util.isRemoveImage(
-					imgBaseName as string
-				)[1] as string[];
-				const modal = new LogsModal(
-					currentMd,
-					imgBaseName,
-					logs,
-					this.app
-				);
-				modal.open();
+		const menu = new Menu();
+		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
+		// imgPath 附件所在元素的父级div上的src属性值，为附件路径，对应内链三种类型
+		let imgPath= '';
+		
+		const delBntTarget = ['button', 'path', 'svg'];
+		const delTarget= ['img', 'iframe', 'video','div'];
+		const targetName: TargetName = {delBntTarget,delTarget};
+
+		// 当使用右键方式删除时
+		if(targetName.delTarget.includes(nodeType)){
+			imgPath =  target.parentElement?.getAttribute("src") as string;
+			const FileBaseName = (imgPath?.match(RegFileBaseName) as string[])[1];
+			if(target.className === 'file-embed-title'){
+				// 当是嵌入附件类型是文件 file时
+				this.addMenu(menu,FileBaseName,currentMd);
 			}
+			this.addMenu(menu,FileBaseName,currentMd);
+		}else if(targetName.delBntTarget.includes(nodeType)){
+			// 使用删除按钮删除时
+			addDelBntHandler.clearImgByDelBnt(target,currentMd,this);
 		}
+		this.registerEscapeButton(menu);
+		menu.showAtPosition({ x: event.pageX, y: event.pageY-40 });
+		this.app.workspace.trigger("NL-fast-file-cleaner:contextmenu", menu);
 	}
 }

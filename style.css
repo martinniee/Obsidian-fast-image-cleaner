@@ -1,0 +1,32 @@
+/* 图片的删除按钮 */
+.internal-embed .btn-delete{
+    position: absolute;
+    left: 0;
+    top: 14px;
+    padding: 0;
+    text-align: center;
+    background-color: transparent;
+    box-shadow: transparent;
+    opacity: 0;
+}
+.internal-embed .btn-delete svg ,
+.internal-embed .btn-delete svg path{
+    border: none;
+    width: 35px;
+    cursor: pointer;
+    height: auto;
+}
+.internal-embed:hover .btn-delete {
+	opacity: 1;
+}
+
+
+.fast-attachment-cleaner-center-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.fast-attachment-cleaner-log{
+    margin-bottom: 13px;
+    margin-top: 5px;
+}
