@@ -6,6 +6,7 @@
     padding: 0;
     text-align: center;
     background-color: transparent;
+    box-shadow: transparent;
     opacity: 0;
 }
 .internal-embed .btn-delete svg ,
