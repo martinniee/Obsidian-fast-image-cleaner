@@ -1,5 +1,6 @@
-import { TFile, Notice } from "obsidian";
-import NathanDeleteImage from "./main";
+import { TFile, Notice,} from "obsidian";
+import NathanDeletefile from "./main";
+import { LogsModal } from "./modals";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
 
@@ -217,3 +218,28 @@ export const ClearAttachment = (
 		new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
 	}
 };
+
+/**
+	 * 处理图片删除， 图片被引用次数>1,则弹出检测次数窗口 ；否则执行删除逻辑
+	 * 
+	 * @param FileBaseName 
+	 * @param currentMd 
+	 */
+export const handlerDelFile = (FileBaseName: string, currentMd: TFile)=> {
+	const plugin = NathanDeletefile;
+
+	if (IsRemove(FileBaseName)[0] as boolean) {
+		ClearAttachment(FileBaseName, plugin);
+	} else {
+		const logs: string[] = IsRemove(
+			FileBaseName
+		)[1] as string[];
+		const modal = new LogsModal(
+			currentMd,
+			FileBaseName,
+			logs,
+			app
+		);
+		modal.open();
+	}
+}
