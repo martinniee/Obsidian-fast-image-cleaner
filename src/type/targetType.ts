@@ -1,4 +1,4 @@
-export interface target{
+export interface TargetName {
     delBntTarget: string[],
     delTarget: string[]
 }
