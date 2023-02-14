@@ -8,24 +8,24 @@ import { TargetName } from "./type/targetType";
 
 
 interface Listener {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	
 	(this: Document, ev: Event): any;
 }
 
 export default class NathanDeletefile extends Plugin {
-	// 将插件选项作为 插件主类的属性
+	
 	settings: NathanDeleteAttactmentSettings;
-	// 当插件启用后
+	
 	async onload() {
 		console.log("Fast file Cleaner plugin loaded...");
-		// 添加插件选项
+		
 		this.addSettingTab(new NathanDeleteAttactmentSettingsTab(this.app, this));
-		// 加载插件选项
+		
 		await this.loadSettings();
-		this.registerDocument(document); // 调用注册文档方法
+		this.registerDocument(document); 
 
 		app.workspace.on(
-			"window-open", // 当
+			"window-open", 
 			(workspaceWindow, window) => {
 				this.registerDocument(window.document);
 			}
@@ -42,12 +42,12 @@ export default class NathanDeletefile extends Plugin {
 			addDelBntHandler.clearAllDelBtns();
 			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 		});
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
+		
 		this.registerInterval(
 			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
 		);
 	}
-	// 当插件禁用后
+	
 	onunload() {
 		console.log("Fast file Cleaner plugin unloaded...");
 	}
@@ -62,7 +62,7 @@ export default class NathanDeletefile extends Plugin {
 		el.on(event, selector, listener, options);
 		return () => el.off(event, selector, listener, options);
 	}
-	// 注册文档，删除附件的按钮点击事件
+	
 	registerDocument(document: Document) {
 		this.register(
 			this.onElement(
@@ -72,7 +72,7 @@ export default class NathanDeletefile extends Plugin {
 				this.onClick.bind(this)
 			)
 		);
-		// 注册文档，给图片添加右键菜单事件
+		
 		this.register(
 			this.onElement(
 				document,
@@ -83,7 +83,7 @@ export default class NathanDeletefile extends Plugin {
 		);
 	}
 
-	// 加载插件选项 设置
+	
 	async loadSettings() {
 		this.settings = Object.assign(
 			{},
@@ -91,7 +91,7 @@ export default class NathanDeletefile extends Plugin {
 			await this.loadData()
 		);
 	}
-	// 保存插件选项 设置
+	
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
@@ -143,31 +143,31 @@ export default class NathanDeletefile extends Plugin {
 	 */
 	onClick(event: MouseEvent) {
 		event.preventDefault();
-		// event.target 获取鼠标事件的目标元素
+		
 		const target = event.target as HTMLElement;
 		const currentMd = app.workspace.getActiveFile() as TFile;
 
 		const nodeType = target.localName;
 		const menu = new Menu();
 		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
-		// imgPath 附件所在元素的父级div上的src属性值，为附件路径，对应内链三种类型
+		
 		let imgPath= '';
 		
 		const delBntTarget = ['button', 'path', 'svg'];
 		const delTarget= ['img', 'iframe', 'video','div'];
 		const targetName: TargetName = {delBntTarget,delTarget};
 
-		// 当使用右键方式删除时
+		
 		if(targetName.delTarget.includes(nodeType)){
 			imgPath =  target.parentElement?.getAttribute("src") as string;
 			const FileBaseName = (imgPath?.match(RegFileBaseName) as string[])[1];
 			if(target.className === 'file-embed-title'){
-				// 当是嵌入附件类型是文件 file时
+				
 				this.addMenu(menu,FileBaseName,currentMd);
 			}
 			this.addMenu(menu,FileBaseName,currentMd);
 		}else if(targetName.delBntTarget.includes(nodeType)){
-			// 使用删除按钮删除时
+			
 			addDelBntHandler.clearImgByDelBnt(target,currentMd,this);
 		}
 		this.registerEscapeButton(menu);

@@ -3,9 +3,9 @@ import { removeReferenceLink } from "./util";
 
 export class LogsModal extends Modal {
 
-    // open() {
-    //     throw new Error('Method not implemented.');
-    // }
+    
+    
+    
 
     textToView: string[]; 
     currentMd: TFile;
@@ -32,22 +32,22 @@ export class LogsModal extends Modal {
         const { contentEl } = this;
         const myModal = this;
 
-        // --------创建一个窗口--------
+        
         const headerWrapper = contentEl.createEl('div');
         headerWrapper.addClass('fast-attachment-cleaner-center-wrapper');
        
-        // --------创建一个h1用于显示标题--------
+        
         const headerEl = headerWrapper.createEl('h1', { text: ' Detection of multiple attachment reference links - logs ' });
         headerEl.addClass('modal-title');
        
 
-        // --------创建一个日志内容框--------
+        
         const logs = contentEl.createEl('div');
         logs.addClass('fast-attachment-cleaner-log');
         logs.innerHTML = this.getLog();
         
 
-        // ----------创建两个按钮,确定和取消---------------
+        
         const buttonWrapper = contentEl.createEl('div');
         buttonWrapper.addClass('fast-attachment-cleaner-center-wrapper');
 
