@@ -1,10 +1,10 @@
 # Fast Image Cleaner
 
-[中文](./ZH.md) / [EN](./README.md)
+[中文](./ZH.md) / EN
 
 > The following English version was translated by deelp
 
-This plugin allows you to quickly remove image attachments and referenced links from your documents in **live view** mode. Mouse over the image and click the delete button.
+This plugin allows you to quickly remove image attachments and referenced links from your documents. You can quickly delete image(or file,media) attachments and their reference links with the click of a button or right-click menu to adapt to different situations
 
 ## Demo
 
@@ -36,10 +36,16 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 
 5. Supported image types: `jpg, jpeg, png, gif, svg, bmp`
 
-6. Support for setting how to handle images after deletion: ① Move to system recycle bin; ② Move to obsidian trash; ③ Delete permanently
-> 😅A small problem: If the image is in a callout block, the delete button may not be displayed directly. To do so, you can manually press the `blank space` button on your keyboard elsewhere in the document.
+6. Support for setting how to handle images after deletion: ① Move to system recycle bin;  ② Move to obsidian trash; ③ Delete permanently
+7. support more file types, in addition to support img type attachments, more types of attachment files
+   1. img type: img, gif, png, jpeg, svg, bmp
+   2. file types: docx, pptx, html, epub...
+   3. video: mp4, mkv... 
 
-> 😁 This plugin theoretically supports the deletion of any type of attachment file, but I don't need it, so for now it only supports image type files
+8. Support two kinds of deletion methods: ① mouse into the picture click delete button; ② right mouse click delete menu option
+
+
+> 😅A small problem: If the image is in a callout block, the delete button may not be displayed directly. To do so, you can manually press the `blank space` button on your keyboard elsewhere in the document.
 
 
 
@@ -55,20 +61,15 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 
 ### Manual installation
 
-go [release](https://github.com/martinniee/Obsidian-fast-image-cleaner/releases) page and download  latest version zip  package
 
-✋~~Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner~~
+✋Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner
 
 ## Use
 
 1. Install and enable the plug-in
 2. In **Live View** mode Mouse over the image and you should see a delete button, click the delete button to delete the image file and remove the reference link from the document
 
-
-
-
-
-Deleted Image Destination
+### Deleted Image Destination
 
 ![image-20230209180042264](assets/README-images/image-20230209180042264.png)
 
@@ -78,7 +79,39 @@ Please make sure that you select the destination for the deleted images under "F
 2. **Move to System Trash** - Files are going to be moved to the Operating System trash.
 3. **Permanently Delete** - Files are going to be destroyed permanently. You won't beable to revert back.
 
+### Deletion Mode
 
+
+
+Mode 1: Mouse over the image and click the Delete button to delete it. This way only supports Live Preview mode.
+
+(1) In live preview mode
+
+
+
+
+
+![image-20230215115615348](assets/README-images/image-20230215115615348.png)
+
+
+
+
+
+Mode 2: Right click on the image and click on the menu item to delete it. This way is supported in both reading and live preview modes.
+
+(1) In live preview mode
+
+
+
+![image-20230215115740755](assets/README-images/image-20230215115740755.png)
+
+
+
+(2)In reading mode
+
+
+
+![image-20230215115818647](assets/README-images/image-20230215115818647.png)
 
 ## Development
 
