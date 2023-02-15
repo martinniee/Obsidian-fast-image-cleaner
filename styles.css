@@ -29,4 +29,5 @@
 .fast-attachment-cleaner-log{
     margin-bottom: 13px;
     margin-top: 5px;
+    white-space: pre-line;  /*  enable line break when html parse text containing '\n'  */
 }

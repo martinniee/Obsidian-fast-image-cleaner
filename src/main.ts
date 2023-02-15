@@ -30,22 +30,16 @@ export default class NathanDeletefile extends Plugin {
 				this.registerDocument(window.document);
 			}
 		);
-		app.workspace.on("file-open", () => {
-			addDelBntHandler.clearAllDelBtns();			
-			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
-		});
-		app.workspace.on("editor-change", () => {
-			addDelBntHandler.clearAllDelBtns();
-			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
-		});
-		app.workspace.on("active-leaf-change", () => {
-			addDelBntHandler.clearAllDelBtns();
-			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
-		});
-		
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
+		this.registerEvent(app.workspace.on('file-open',()=>{
+			this.HoverDeltedButton();
+		}))
+		this.registerEvent(app.workspace.on("editor-change", () => {
+			this.HoverDeltedButton();
+		}))
+		this.registerEvent(app.workspace.on("active-leaf-change", () => {
+			this.HoverDeltedButton();
+		}))
+		this.HoverDeltedButton();
 	}
 	
 	onunload() {
@@ -94,6 +88,16 @@ export default class NathanDeletefile extends Plugin {
 	
 	async saveSettings() {
 		await this.saveData(this.settings);
+	}
+	HoverDeltedButton = ()=>{
+		// active hover delete button
+		if(this.settings.deleteBnt){
+			this.isAddHoverDeltedButton();
+		}
+	}
+	isAddHoverDeltedButton= ()=>{
+		addDelBntHandler.clearAllDelBtns();
+		addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 	}
 	registerEscapeButton(menu: Menu, document: Document = activeDocument) {
 		menu.register(

@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
-	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"name": "nl-fast-image-cleaner",
+	"version": "0.3.0",
+	"description": "You can quickly delete image(or file,media) attachments and their reference links with the click of a button or right-click menu to adapt to different situations",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
