@@ -35,7 +35,7 @@ export class NathanDeleteAttactmentSettingsTab extends PluginSettingTab {
 
         // add delBnt toggle
         new Setting(containerEl)
-            .setName('mousehover delete button')
+            .setName('Mousehover Delete Button')
             .setDesc('Turn on if you want mousehover delete button for clearing the image.')
             .addToggle((toggle) =>
                 toggle.setValue(this.plugin.settings.deleteBnt).onChange((value) => {
