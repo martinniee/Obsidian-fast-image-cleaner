@@ -20,10 +20,10 @@ export class LogsModal extends Modal {
 
     getLog(): string{
         const CurFirstMd: string = this.textToView.shift() as string;
-        const curMd: string = "The md document that currently references the attachment: </br>" + CurFirstMd + "</br></br>";
+        const curMd: string = "The md document that currently references the attachment: \n" + CurFirstMd + "\n\n";
 
-        let otherMds: string = this.textToView.join("</br>");
-        otherMds = "List of all documents that reference this attachment: </br>" + otherMds;
+        let otherMds: string = this.textToView.join("\n");
+        otherMds = "List of all documents that reference this attachment: \n" + otherMds;
         const log: string = curMd + otherMds;
         return log;
     }
@@ -44,7 +44,8 @@ export class LogsModal extends Modal {
         
         const logs = contentEl.createEl('div');
         logs.addClass('fast-attachment-cleaner-log');
-        logs.innerHTML = this.getLog();
+        logs.setText(this.getLog());
+        
         
 
         
