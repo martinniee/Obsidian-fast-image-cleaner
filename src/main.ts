@@ -42,10 +42,6 @@ export default class NathanDeletefile extends Plugin {
 			addDelBntHandler.clearAllDelBtns();
 			addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 		});
-		
-		this.registerInterval(
-			window.setInterval(() => console.log("setInterval"), 5 * 60 * 1000)
-		);
 	}
 	
 	onunload() {
