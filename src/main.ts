@@ -93,6 +93,8 @@ export default class NathanDeletefile extends Plugin {
 		// active hover delete button
 		if(this.settings.deleteBnt){
 			this.isAddHoverDeltedButton();
+		}else{
+			addDelBntHandler.clearAllDelBtns();
 		}
 	}
 	isAddHoverDeltedButton= ()=>{
