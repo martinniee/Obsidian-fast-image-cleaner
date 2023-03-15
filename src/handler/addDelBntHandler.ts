@@ -12,7 +12,7 @@ export const getAllImgDivs = (): HTMLCollection => {
 
     const leaf_active: HTMLCollection = document.getElementsByClassName("workspace-leaf mod-active");
 
-    const preview_content: HTMLCollection = leaf_active[0].getElementsByClassName("markdown-source-view cm-s-obsidian mod-cm6 is-folding is-live-preview node-insert-event");
+    const preview_content: HTMLCollection = leaf_active[0].getElementsByClassName("markdown-source-view cm-s-obsidian mod-cm6 is-folding is-readable-line-width node-insert-event is-live-preview");
 
     const embed_divs: HTMLCollection = preview_content[0]?.getElementsByClassName("internal-embed media-embed image-embed is-loaded");
     return embed_divs;

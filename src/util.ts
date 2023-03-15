@@ -20,6 +20,7 @@ export const removeImgDom = (target: HTMLElement) => {
  * @param mdFile  需要删除的图片所在的md文件
  */
 export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
+	// Escape . to \. for regular expresion
 	const origin_filecontents = await app.vault.read(mdFile);
 	const new_filecontents: string[] = [];
 	const fileContents_array = origin_filecontents.split("\n");
@@ -29,19 +30,21 @@ export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
 			"gm"
 		);
 		const regWikiRefLink2 = new RegExp(
-			"!\\[\\[.*?" + imagePath + ".*?\\]\\]",
+			"!\\[\\[.*?" + imagePath + "(\\|\\d*)?\\]\\]",
 			"gm"
 		);
-		const isIncludeImage = fileContent.includes(imagePath);
-		const isMarkdownStyle = fileContent.match(regMdRefLink) != null;
-		const isWikiStyle = fileContent.match(regWikiRefLink2) != null;
+		// Decode  when current line contains cleared image reference in markdown style with %20(space) or chinese characters
+		const fileContent_decode = decodeURI(fileContent);
+		const isIncludeImage = fileContent_decode.includes(imagePath);
+		const isMarkdownStyle = fileContent_decode.match(regMdRefLink) != null;
+		const isWikiStyle = fileContent_decode.match(regWikiRefLink2) != null;
 		if (isIncludeImage && isMarkdownStyle) {
 			new_filecontents.push(
-				fileContent.replace(regMdRefLink, '')
+				fileContent_decode.replace(regMdRefLink, '')
 			);
 		} else if (isIncludeImage && isWikiStyle) {
 			new_filecontents.push(
-				fileContent.replace(regWikiRefLink2, '')
+				fileContent_decode.replace(regWikiRefLink2, '')
 			);
 		} else {
 			new_filecontents.push(fileContent);
