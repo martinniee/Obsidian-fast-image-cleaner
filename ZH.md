@@ -78,5 +78,4 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 
 ❤ 如果你喜欢使用 Obsidian-Fast-Image-Cleaner，那么请支持我的工作，请给我充电。
 https://afdian.net/a/nathanel 或者
-
 <img src="assets/ZH-images/微信支付宝二合一收款码.jpg" alt="微信支付宝二合一收款码" style="zoom: 33%;" />
