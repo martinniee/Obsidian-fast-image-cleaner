@@ -2,46 +2,35 @@ import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
 import { NathanDeleteAttactmentSettingsTab } from "./settings";
 import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
-import * as addDelBntHandler from "./handler/addDelBntHandler";
-import { TargetName } from "./type/targetType";
 
 
 
 interface Listener {
-	
+
 	(this: Document, ev: Event): any;
 }
 
 export default class NathanDeletefile extends Plugin {
-	
+
 	settings: NathanDeleteAttactmentSettings;
-	
+
 	async onload() {
 		console.log("Fast file Cleaner plugin loaded...");
-		
+
 		this.addSettingTab(new NathanDeleteAttactmentSettingsTab(this.app, this));
-		
+
 		await this.loadSettings();
-		this.registerDocument(document); 
+		this.registerDocument(document);
 
 		app.workspace.on(
-			"window-open", 
+			"window-open",
 			(workspaceWindow, window) => {
 				this.registerDocument(window.document);
 			}
 		);
-		this.registerEvent(app.workspace.on('file-open',()=>{
-			this.HoverDeltedButton();
-		}))
-		this.registerEvent(app.workspace.on("editor-change", () => {
-			this.HoverDeltedButton();
-		}))
-		this.registerEvent(app.workspace.on("active-leaf-change", () => {
-			this.HoverDeltedButton();
-		}))
-		this.HoverDeltedButton();
+
 	}
-	
+
 	onunload() {
 		console.log("Fast file Cleaner plugin unloaded...");
 	}
@@ -56,7 +45,7 @@ export default class NathanDeletefile extends Plugin {
 		el.on(event, selector, listener, options);
 		return () => el.off(event, selector, listener, options);
 	}
-	
+
 	registerDocument(document: Document) {
 		this.register(
 			this.onElement(
@@ -66,7 +55,7 @@ export default class NathanDeletefile extends Plugin {
 				this.onClick.bind(this)
 			)
 		);
-		
+
 		this.register(
 			this.onElement(
 				document,
@@ -77,7 +66,7 @@ export default class NathanDeletefile extends Plugin {
 		);
 	}
 
-	
+
 	async loadSettings() {
 		this.settings = Object.assign(
 			{},
@@ -85,21 +74,9 @@ export default class NathanDeletefile extends Plugin {
 			await this.loadData()
 		);
 	}
-	
+
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-	HoverDeltedButton = ()=>{
-		// active hover delete button
-		if(this.settings.deleteBnt){
-			this.isAddHoverDeltedButton();
-		}else{
-			addDelBntHandler.clearAllDelBtns();
-		}
-	}
-	isAddHoverDeltedButton= ()=>{
-		addDelBntHandler.clearAllDelBtns();
-		addDelBntHandler.addDelBtn(addDelBntHandler.getAllImgDivs());
 	}
 	registerEscapeButton(menu: Menu, document: Document = activeDocument) {
 		menu.register(
@@ -125,59 +102,52 @@ export default class NathanDeletefile extends Plugin {
 	 * @param FileBaseName 
 	 * @param currentMd 
 	 */
-	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile)=>{
+	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile) => {
 		menu.addItem((item: MenuItem) =>
-				item
-					.setIcon("trash-2")
-					.setTitle("clear file and referenced link")
-					.setChecked(true)
-					.onClick(async () => {
-						try {
-							Util.handlerDelFile(FileBaseName, currentMd,this);
-						} catch {
-							new Notice("Error, could not clear the file!");
-						}
-					})
+			item
+				.setIcon("trash-2")
+				.setTitle("clear file and referenced link")
+				.setChecked(true)
+				.onClick(async () => {
+					try {
+						Util.handlerDelFile(FileBaseName, currentMd, this);
+					} catch {
+						new Notice("Error, could not clear the file!");
+					}
+				})
 		);
 	}
-	
 
-	
+
+
 
 	/**
 	 * 鼠标点击事件
 	 */
 	onClick(event: MouseEvent) {
 		event.preventDefault();
-		
+
 		const target = event.target as HTMLElement;
 		const currentMd = app.workspace.getActiveFile() as TFile;
 
 		const nodeType = target.localName;
 		const menu = new Menu();
-		const RegFileBaseName = new RegExp('\\/?([^\\/\\n]+\\.\\w+)', 'm');
-		
-		let imgPath= '';
-		
-		const delBntTarget = ['button', 'path', 'svg'];
-		const delTarget= ['img', 'iframe', 'video','div'];
-		const targetName: TargetName = {delBntTarget,delTarget};
+		// target deleted img file base name
+		const RegFileBaseName = new RegExp(/\/?([^\/\n]+\.\w+)/, 'm');
+		let imgPath = '';
+		const delTargetType = ['img', 'iframe', 'video', 'div'];
 
-		
-		if(targetName.delTarget.includes(nodeType)){
-			imgPath =  target.parentElement?.getAttribute("src") as string;
+
+		if (delTargetType.includes(nodeType)) {
+			imgPath = target.parentElement?.getAttribute("src") as string;
 			const FileBaseName = (imgPath?.match(RegFileBaseName) as string[])[1];
-			if(target.className === 'file-embed-title'){
-				
-				this.addMenu(menu,FileBaseName,currentMd);
+			if (target.className === 'file-embed-title') {
+				this.addMenu(menu, FileBaseName, currentMd);
 			}
-			this.addMenu(menu,FileBaseName,currentMd);
-		}else if(targetName.delBntTarget.includes(nodeType)){
-			
-			addDelBntHandler.clearImgByDelBnt(target,currentMd,this);
+			this.addMenu(menu, FileBaseName, currentMd);
 		}
 		this.registerEscapeButton(menu);
-		menu.showAtPosition({ x: event.pageX, y: event.pageY-40 });
+		menu.showAtPosition({ x: event.pageX, y: event.pageY - 40 });
 		this.app.workspace.trigger("NL-fast-file-cleaner:contextmenu", menu);
 	}
 }
