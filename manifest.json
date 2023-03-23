@@ -1,9 +1,9 @@
 {
 	"id": "nl-fast-image-cleaner",
 	"name": "Fast Image Cleaner",
-	"version": "0.3.3",
+	"version": "0.3.6",
 	"minAppVersion": "1.0.9",
-	"description": "You can quickly delete image(or file,media) attachments and their reference links with the click of a button or right-click menu to adapt to different situations",
+	"description": "This plugin allows you to quickly remove image attachment and referenced link from your documents in both LIVE , READ mode by right-click menu",
 	"author": "Nathaniel",
 	"authorUrl": "https://github.com/martinniee/",
 	"isDesktopOnly": false
