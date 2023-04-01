@@ -1,5 +1,7 @@
-import { TFile, Notice, } from "obsidian";
-import NathanDeletefile from './main';
+import { TFile, Notice } from "obsidian";
+import { imageReferencedState } from "./enum/imageReferencedState";
+import { resultDetermineImageDeletion as deletionResult } from "./interface/resultDetermineImageDeletion";
+import NathanDeletefile from "./main";
 import { LogsModal } from "./modals";
 const SUCCESS_NOTICE_TIMEOUT = 1800;
 /**
@@ -12,12 +14,12 @@ export const removeImgDom = (target: HTMLElement) => {
 		?.parentElement as HTMLDivElement;
 	content_container.removeChild(img_div);
 };
+
 /**
- * 移除图片引用链接
- * 
- * 
- * @param imagePath  图片的链接路径，不包括父级目录，为 图片文件名.后缀 形式
- * @param mdFile  需要删除的图片所在的md文件
+ * Remove reference link
+ *
+ * @param imagePath  the path of the current deleted image without subpath,format as  name.extension
+ * @param mdFile  the markdown file containing the deleted image
  */
 export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
 	// Escape . to \. for regular expresion
@@ -39,12 +41,10 @@ export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
 		const isMarkdownStyle = fileContent_decode.match(regMdRefLink) != null;
 		const isWikiStyle = fileContent_decode.match(regWikiRefLink2) != null;
 		if (isIncludeImage && isMarkdownStyle) {
-			new_filecontents.push(
-				fileContent_decode.replace(regMdRefLink, '')
-			);
+			new_filecontents.push(fileContent_decode.replace(regMdRefLink, ""));
 		} else if (isIncludeImage && isWikiStyle) {
 			new_filecontents.push(
-				fileContent_decode.replace(regWikiRefLink2, '')
+				fileContent_decode.replace(regWikiRefLink2, "")
 			);
 		} else {
 			new_filecontents.push(fileContent);
@@ -53,37 +53,49 @@ export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
 	app.vault.adapter.write(mdFile.path, new_filecontents.join("\n"));
 };
 /**
- * 用于判断是否删除图片
+ *
+ * @param FileBaseName format is as name.extension
+ * @returns
  */
-export const IsRemove = (FileBaseName: string): [boolean, string[]] => {
+export const isRemove = (
+	FileBaseName: string
+): { state: number; mdPath: string[] } => {
 	const currentMd = app.workspace.getActiveFile() as TFile;
+	const resolvedLinks = app.metadataCache.resolvedLinks;
 	const deletedTargetFile = getFileByBaseName(currentMd, FileBaseName) as
 		| TFile
 		| undefined;
-	const mdPath: string[] = [];
-	let CurMDPath = "";
-
-	let refNum = 0;
-	const resolvedLinks = app.metadataCache.resolvedLinks;
-
-
+	let CurMDPath: string;
+	// // record the state of image referenced and all paths of markdown referencing to the image
+	let result: deletionResult = {
+		state: 0,
+		mdPath: [],
+	};
+	let refNum = 0; // record the number of note referencing to the image.
 	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
 		if (currentMd.path === mdFile) {
 			CurMDPath = currentMd.path;
-			mdPath.unshift(CurMDPath);
+			result.mdPath.unshift(CurMDPath);
 		}
 		for (const [filePath, nr] of Object.entries(links)) {
 			if (deletedTargetFile?.path === filePath) {
 				refNum++;
+				// if the deleted target image referenced by current note more than once
 				if (nr > 1) {
-					refNum += 1;
+					result.state = imageReferencedState.MutipTime;
+					result.mdPath.push(mdFile);
+					return result;
 				}
-				mdPath.push(mdFile);
+				result.mdPath.push(mdFile);
 			}
 		}
 	}
-	const result: boolean = refNum > 1 ? false : true;
-	return [result, mdPath];
+	if (refNum > 1) {
+		result.state = imageReferencedState.More;
+	} else {
+		result.state = imageReferencedState.Once;
+	}
+	return result;
 };
 /**
  * 	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
@@ -143,24 +155,32 @@ export const ClearAttachment = (
 	}
 };
 /**
-	 * 处理图片删除
-	 * 
-	 * @param FileBaseName 
-	 * @param currentMd 
-	 */
-export const handlerDelFile = (FileBaseName: string, currentMd: TFile, plugin: NathanDeletefile) => {
-	if (IsRemove(FileBaseName)[0] as boolean) {
-		ClearAttachment(FileBaseName, plugin);
-	} else {
-		const logs: string[] = IsRemove(
-			FileBaseName
-		)[1] as string[];
-		const modal = new LogsModal(
-			currentMd,
-			FileBaseName,
-			logs,
-			app
-		);
-		modal.open();
+ * 处理图片删除
+ *
+ * @param FileBaseName
+ * @param currentMd
+ */
+export const handlerDelFile = (
+	FileBaseName: string,
+	currentMd: TFile,
+	plugin: NathanDeletefile
+) => {
+	let logs: string[];
+	let modal;
+	const state: number = isRemove(FileBaseName).state;
+	switch (state) {
+		case 0:
+			// clear attachment directly
+			ClearAttachment(FileBaseName, plugin);
+			break;
+		case 1:
+		case 2:
+			// referenced by multiple notes more than once 
+			logs = isRemove(FileBaseName).mdPath as string[];
+			modal = new LogsModal(currentMd, state, FileBaseName, logs, app);
+			modal.open();
+		default:
+			break;
 	}
-}
+
+};
