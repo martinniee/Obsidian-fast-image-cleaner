@@ -9,7 +9,7 @@ const SUCCESS_NOTICE_TIMEOUT = 10000;
  * 1. get current file
  * 2. get TFile of the attachment referenced by file
  */
-export const deleteAllAttachmentsInCurrentFile = (plugin: NathanDeletefile) => {
+export const deleteAllAttachmentsInCurrentFile = (plugin: NathanDeletefile): TFile | undefined => {
     // 1. get current file
     const activeMd: TFile = app.workspace.getActiveFile() as TFile;
     const resolvedLinks = app.metadataCache.resolvedLinks;
@@ -27,7 +27,7 @@ export const deleteAllAttachmentsInCurrentFile = (plugin: NathanDeletefile) => {
                         deleteAttachmentWhenDeleteNote(AttachFile, plugin);
                     }
                 } catch (error) {
-                    new Notice(` cannot get the  file`);
+                    console.error(error);
                     return undefined;
                 }
             }

@@ -121,6 +121,7 @@ export const getFileByBaseName = (
 						}
 					} catch (error) {
 						new Notice(` cannot get the image file`);
+						console.error(error);
 						return undefined;
 					}
 				}
@@ -137,22 +138,12 @@ export const getFileByBaseName = (
  */
 export const ClearAttachment = (
 	FileBaseName: string,
-	plugin: NathanDeletefile
 ) => {
-	const deleteOption = plugin.settings.deleteOption;
 	const currentMd = app.workspace.getActiveFile() as TFile;
 	const file = getFileByBaseName(currentMd, FileBaseName) as TFile;
 	removeReferenceLink(FileBaseName, app.workspace.getActiveFile() as TFile);
-	if (deleteOption === ".trash") {
-		app.vault.trash(file, false);
-		new Notice("Image moved to Obsidian Trash !", SUCCESS_NOTICE_TIMEOUT);
-	} else if (deleteOption === "system-trash") {
-		app.vault.trash(file, true);
-		new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
-	} else if (deleteOption === "permanent") {
-		app.vault.delete(file);
-		new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
-	}
+	// @ts-ignore
+	app.fileManager.promptForDeletion(file)
 };
 /**
  * 处理图片删除
@@ -171,11 +162,11 @@ export const handlerDelFile = (
 	switch (state) {
 		case 0:
 			// clear attachment directly
-			ClearAttachment(FileBaseName, plugin);
+			ClearAttachment(FileBaseName);
 			break;
 		case 1:
 		case 2:
-			// referenced by multiple notes more than once 
+			// referenced by eithor only note or other mutiple notes more than once 
 			logs = isRemove(FileBaseName).mdPath as string[];
 			modal = new LogsModal(currentMd, state, FileBaseName, logs, app);
 			modal.open();
