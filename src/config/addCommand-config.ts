@@ -11,7 +11,7 @@ export const addCommand = (myPlugin: NathanDeletefile) => {
             // 1.delete all attachment in the note
             deleteAllAttachmentsInCurrentFile(myPlugin);
             // 2.delete current note
-            deleteNote(app.workspace.getActiveFile() as TFile)
+            deleteNote(app.workspace.getActiveFile() as TFile, myPlugin)
         }
     });
 }

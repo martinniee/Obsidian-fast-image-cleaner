@@ -15,7 +15,7 @@ export const deleteAllAttachmentsInCurrentFile = (plugin: NathanDeletefile): TFi
     const resolvedLinks = app.metadataCache.resolvedLinks;
 
     for (const [mdFile, links] of Object.entries(resolvedLinks)) {
-        if (activeMd.path === mdFile) {
+        if (activeMd?.path === mdFile) {
             for (const [filePath, nr] of Object.entries(links)) {
                 // if the attachment in the note has been referenced by other notes  simultaneously
                 //  ,skip it.

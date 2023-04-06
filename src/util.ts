@@ -136,14 +136,30 @@ export const getFileByBaseName = (
  * @param plugin 当前插件
  * @returns
  */
-export const ClearAttachment = (
+export const ClearAttachment = async (
 	FileBaseName: string,
+	plugin: NathanDeletefile
 ) => {
+	const deleteOption = plugin.settings.deleteOption;
 	const currentMd = app.workspace.getActiveFile() as TFile;
 	const file = getFileByBaseName(currentMd, FileBaseName) as TFile;
 	removeReferenceLink(FileBaseName, app.workspace.getActiveFile() as TFile);
-	// @ts-ignore
-	app.fileManager.promptForDeletion(file)
+	try {
+		if (deleteOption === ".trash") {
+			await app.vault.trash(file, false);
+			new Notice("Image moved to Obsidian Trash !", SUCCESS_NOTICE_TIMEOUT);
+		} else if (deleteOption === "system-trash") {
+			await app.vault.trash(file, true);
+			new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
+		} else if (deleteOption === "permanent") {
+			await app.vault.delete(file);
+			new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
+		}
+	} catch (error) {
+		console.error(error);
+		new Notice("Faild to delelte the image !", SUCCESS_NOTICE_TIMEOUT);
+
+	}
 };
 /**
  * 处理图片删除
@@ -162,7 +178,7 @@ export const handlerDelFile = (
 	switch (state) {
 		case 0:
 			// clear attachment directly
-			ClearAttachment(FileBaseName);
+			ClearAttachment(FileBaseName, plugin);
 			break;
 		case 1:
 		case 2:
