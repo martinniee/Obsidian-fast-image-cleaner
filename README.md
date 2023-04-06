@@ -10,31 +10,35 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 
 ## Features
 
-1. Remove image attachment file and its referencing link
-2. When the same image is referenced twice or more, a popup window will appear and it will not be deleted directly to avoid the image being deleted by mistake. pop-up window with the current reference to the image of the document and other documents referencing the image of the document path information, the bottom `close` button and `remove link` button, click `remove link` button can continue to remove **current document** in the image reference link.
-    - ~~Case 1: the same document is referenced multiple times in a single document~~
-    - Case 2: the same image is referenced in multiple documents at the same time
-3. Support markdown and wiki link style links
-4. Support for three different formats of **Internal link types** ([details](https://help.obsidian.md/Linking+notes+and+files/Internal+links))
-    - The shortest possible form
-    - Relative path based on the current notes
-    - Absolute path based on the repository root directory
-5. Supported image types: `jpg, jpeg, png, gif, svg, bmp`
-
-6. Support for setting how to handle images after deletion: ① Move to system recycle bin; ② Move to obsidian trash; ③ Delete permanently
-7. support more file types, in addition to support img type attachments, more types of attachment files
-
-    1. img type: img, gif, png, jpeg, svg, bmp
-    2. file types: docx, pptx, html, epub...
-    3. video: mp4, mkv...
-
-8. Deletion methods: right mouse click delete menu option
+1. Delete image attachment and its reference link when right-click on image ,then click the delete item.
+2. Scenarios when deleting image
+    1. If the image only is referenced by current note,then delete image attachment and remove link.
+    2. If the image is referenced by current note wtih more times,then popup a window.User should remove the link by manually (avoiding deleted image attachment linked by other notes)
+    3. If the image is referenced by mutiple notes,then popup a window.User could go on to remove the link by clicking the Close button. (avoiding deleted image attachment linked by other notes)
+3. Support both `makdown` and `wiki` link style.
+4. Support three various of internal link types, （details](https://help.obsidian.md/Linking+notes+and+files/Internal+links)）
+    1. Relative path to file
+    2. Shortest path when possible
+    3. Absolute path in vault
+5. Supported image format: `jpg, jpeg, png, gif, svg, bmp`
+6. Support processing approach after deleting image
+    1. Move to system trash
+    2. Move to Obsidian trash (.trash folder)
+    3. Permanently delete
+7. Support more file types, in addition to supporting img type attachments, more types of attachment files (currently does not support right-click to remove `PDF` attachments)
+    1. Image: img、gif、png、jpeg、svg, bmp
+    2. FIle: docx、pptx、html、epub...
+    3. Video: mp4、mkv...
+8. When you delete a note, all attachment files referenced in the note are also deleted
+    1. If the attachment is also referenced by other notes, it is not deleted.
+    2. Delete an attachment if it is referenced only one or more times by the current note to be deleted
+    3. Delete method: (1) Directly right-click in the file list to delete the note; (2) Delete notes through the command provided by the plugin.
 
 ## Install
 
 ### Install from plugin marketplace
 
-...
+Install directly from the plugin market and type `Fast Image cleaner`.
 
 ### Install from brat
 
@@ -42,7 +46,8 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 
 ### Manual installation
 
-✋Download the latest release. Extract and put the three files (main.js, manifest.json, styles.css) to folder {{obsidian_vault}}/.obsidian/plugins/Obsidian-fast-image-cleaner
+-   Go to the release page and download the '.zip' package
+-   Download and extract the three files (`main.js`, `manifest.json`, `style.css`) into the `/.obsidian/plugins/Obsidian-fast-image-cleaner` folder.
 
 ## Use
 
@@ -61,12 +66,20 @@ Please make sure that you select the destination for the deleted images under "F
 
 ### Deletion Mode
 
+#### Delete attachments and links
+
 (1) In live preview mode
 
 ![image-20230215115818647](assets/ZH-images/image-20230215115818647.png)
 
 (2)In reading mode
 ![image-20230215115818647](assets/ZH-images/image-20230215115818647.png)
+
+#### Delete attachments when deleting notes
+
+1. Right-click the note in the file list and click the delete item to delete, the attachments in the note will be deleted
+
+2. Open the command palete and type` Delete file and clear...`, and enter will delete the current note, and remove the attachments in the note, excluding attachments that are also referenced by other notes
 
 ## Development
 
@@ -76,4 +89,7 @@ This plugin follows the structure of the [Obsidian Sample Plugin](https://github
 
 ❤ If you enjoy using Obsidian-Fast-Image-Cleaner, then please support my work by giving me a charge at: https://ko-fi.com/nathanielll
 
+
+
 <a href='https://ko-fi.com/J3J6IL7MY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
