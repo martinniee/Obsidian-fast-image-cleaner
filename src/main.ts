@@ -1,4 +1,6 @@
 import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
+import { deleteAllAttachmentsInCurrentFile } from "./command/delete-all-attachments-in-current-file";
+import { addCommand } from "./config/addCommand-config";
 import { NathanDeleteAttactmentSettingsTab } from "./settings";
 import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
@@ -28,6 +30,12 @@ export default class NathanDeletefile extends Plugin {
 				this.registerDocument(window.document);
 			}
 		);
+		//  on(name: 'delete', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
+		this.registerEvent(app.vault.on('delete', () => {
+			deleteAllAttachmentsInCurrentFile(this);
+		}));
+		// register all commands in addCommand function
+		addCommand(this);
 
 	}
 
@@ -118,9 +126,6 @@ export default class NathanDeletefile extends Plugin {
 		);
 	}
 
-
-
-
 	/**
 	 * 鼠标点击事件
 	 */
@@ -151,3 +156,7 @@ export default class NathanDeletefile extends Plugin {
 		this.app.workspace.trigger("NL-fast-file-cleaner:contextmenu", menu);
 	}
 }
+function deleteAllAttachmentsInCurrentFilee() {
+	throw new Error("Function not implemented.");
+}
+
