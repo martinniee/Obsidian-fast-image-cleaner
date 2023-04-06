@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
     2. If the image is referenced by current note wtih more times,then popup a window.User should remove the link by manually (avoiding deleted image attachment linked by other notes)
     3. If the image is referenced by mutiple notes,then popup a window.User could go on to remove the link by clicking the Close button. (avoiding deleted image attachment linked by other notes)
 3. Support both `makdown` and `wiki` link style.
-4. Support three various of internal link types, （details](https://help.obsidian.md/Linking+notes+and+files/Internal+links)）
+4. Support three various of internal link types, ( [details](https://help.obsidian.md/Linking+notes+and+files/Internal+links) )
     1. Relative path to file
     2. Shortest path when possible
     3. Absolute path in vault
