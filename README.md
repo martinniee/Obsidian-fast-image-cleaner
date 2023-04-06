@@ -89,7 +89,8 @@ This plugin follows the structure of the [Obsidian Sample Plugin](https://github
 
 ❤ If you enjoy using Obsidian-Fast-Image-Cleaner, then please support my work by giving me a charge at: https://ko-fi.com/nathanielll
 
-
-
 <a href='https://ko-fi.com/J3J6IL7MY' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
+## Plan
+
+-   [ ] achieve [#3](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/3)

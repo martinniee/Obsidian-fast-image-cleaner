@@ -12,6 +12,7 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 
 1. 鼠标右键图片点击删除菜单选项，会删除图片附件文件及其引用链接
 2. 被删除的图片的情况
+
     1. 仅被当前文档引用且**一次**，则直接删除图片，同时移除链接。
     2. 仅被当前文档引用且**多次**，则弹出提示窗口，要求用户手动移除链接，不删除图片。（避免图片被错误删除）
     3. 被**多个文档**引用，则弹出提示窗口，用户可点击`close`按钮继续移除**当前文档**中的图片引用链接，不删除图片。（避免图片被错误删除）
@@ -28,11 +29,11 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
     1. img 类型: img、gif、png、jpeg、svg, bmp
     2. file 类型: docx、pptx、html、epub...
     3. video: mp4、mkv...
+
 8. 当删除笔记时同时删除此笔记中引用的所有附件文件
     1. 如果附件被其他笔记也引用，则不删除。
     2. 如果附件仅被当前**需被删除的笔记**引用一次或多次，则删除。
-    3. 删除方式：①直接在文件列表右键删除笔记；②通过插件提供的命令删除笔记。
-
+    3. 删除方式：① 直接在文件列表右键删除笔记；② 通过插件提供的命令删除笔记。
 
 ## 安装
 
@@ -48,8 +49,8 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 
 方式
 
-- 进入 release页面，下载`.zip`压缩包
-- 下载并将三个文件（`main.js`、`manifest.json`、`style.css`）提取并放到`<your_vault>/.obsidian/plugins/Obsidian-fast-image-cleaner `文件夹中。
+-   进入 release 页面，下载`.zip`压缩包
+-   下载并将三个文件（`main.js`、`manifest.json`、`style.css`）提取并放到`<your_vault>/.obsidian/plugins/Obsidian-fast-image-cleaner `文件夹中。
 
 ## 使用
 
@@ -83,8 +84,6 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 1. 文件列表右键笔记点击删除选项删除，会删除笔记中的附件
 2. 打开命令命板输入`Delete file and clear...`，回车会删除当前笔记，同时删除笔记中的附件，不包括被其他笔记也引用的附件
 
-
-
 ## 开发
 
 这个插件遵循 [Obsidian Sample Plugin](https://github.com/obsidianmd/obsidian-sample-plugin) 插件的结构，请看那里的进一步细节。
@@ -94,3 +93,7 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 ❤ 如果你喜欢使用 Obsidian-Fast-Image-Cleaner，那么请支持我的工作，请给我充电。
 https://afdian.net/a/nathanel 或者
 <img src="assets/ZH-images/微信支付宝二合一收款码.jpg" alt="微信支付宝二合一收款码" style="zoom: 33%;" />
+
+## 计划
+
+-   [ ] 实现 [#3](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/3)
