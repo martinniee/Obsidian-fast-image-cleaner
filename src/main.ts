@@ -4,6 +4,7 @@ import { addCommand } from "./config/addCommand-config";
 import { NathanDeleteAttactmentSettingsTab } from "./settings";
 import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
+import { deleteNote } from "./utils/deleteNote";
 
 
 
@@ -29,6 +30,26 @@ export default class NathanDeletefile extends Plugin {
 			(workspaceWindow, window) => {
 				this.registerDocument(window.document);
 			}
+		);
+		// add contextmenu on file context
+		this.registerEvent(
+			this.app.workspace.on("file-menu", (menu, file) => {
+				const addMenuItem = (item: MenuItem) => {
+					item.
+						setTitle("Delete the file and its all attachments")
+						.setIcon('trash-2')
+						.setSection('danger')
+						;
+					item.onClick(async () => {
+						// 1.delete all attachment in the note
+						await deleteAllAttachmentsInCurrentFile(this);
+						new Notice("All attachments have been delelted")
+						// 2.delete current note
+						await deleteNote(app.workspace.getActiveFile() as TFile, this)
+					});
+				};
+				menu.addItem(addMenuItem);
+			})
 		);
 		//  on(name: 'delete', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
 		// this.registerEvent(app.vault.on('delete', () => {

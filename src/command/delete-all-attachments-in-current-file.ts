@@ -9,11 +9,10 @@ const SUCCESS_NOTICE_TIMEOUT = 10000;
  * 1. get current file
  * 2. get TFile of the attachment referenced by file
  */
-export const deleteAllAttachmentsInCurrentFile = (plugin: NathanDeletefile): TFile | undefined => {
+export const deleteAllAttachmentsInCurrentFile = async (plugin: NathanDeletefile): Promise<TFile | undefined> => {
     // 1. get current file
     const activeMd: TFile = app.workspace.getActiveFile() as TFile;
     const resolvedLinks = app.metadataCache.resolvedLinks;
-
     for (const [mdFile, links] of Object.entries(resolvedLinks)) {
         if (activeMd?.path === mdFile) {
             for (const [filePath, nr] of Object.entries(links)) {
@@ -24,7 +23,7 @@ export const deleteAllAttachmentsInCurrentFile = (plugin: NathanDeletefile): TFi
                     // 2. get TFile of the attachment referenced by file
                     const AttachFile: TFile = app.vault.getAbstractFileByPath(filePath) as TFile;
                     if (AttachFile instanceof TFile) {
-                        deleteAttachmentWhenDeleteNote(AttachFile, plugin);
+                        await deleteAttachmentWhenDeleteNote(AttachFile, plugin);
                     }
                 } catch (error) {
                     console.error(error);
