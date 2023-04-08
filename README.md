@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 8. When you delete a note, all attachment files referenced in the note are also deleted
     1. If the attachment is also referenced by other notes, it is not deleted.
     2. Delete an attachment if it is referenced only one or more times by the current note to be deleted
-    3. Delete method: (1) Directly right-click in the file list to delete the note; (2) Delete notes through the command provided by the plugin.
+    3. Delete method: Delete notes through the command provided by the plugin.
 
 ## Install
 
@@ -46,8 +46,8 @@ Install directly from the plugin market and type `Fast Image cleaner`.
 
 ### Manual installation
 
--   Go to the release page and download the '.zip' package
--   Download and extract the three files (`main.js`, `manifest.json`, `style.css`) into the `/.obsidian/plugins/Obsidian-fast-image-cleaner` folder.
+-   Way 1: Go to the release page and download the '.zip' package
+-   Way 2 : Download and extract the three files (`main.js`, `manifest.json`, `style.css`) into the `/.obsidian/plugins/Obsidian-fast-image-cleaner` folder.
 
 ## Use
 
@@ -77,9 +77,7 @@ Please make sure that you select the destination for the deleted images under "F
 
 #### Delete attachments when deleting notes
 
-1. Right-click the note in the file list and click the delete item to delete, the attachments in the note will be deleted
-
-2. Open the command palete and type` Delete file and clear...`, and enter will delete the current note, and remove the attachments in the note, excluding attachments that are also referenced by other notes
+1. Open the command palete and type` Delete file and clear...`, and enter will delete the current note, and remove the attachments in the note, excluding attachments that are also referenced by other notes
 
 ## Development
 
