@@ -5,7 +5,13 @@
 -   ✨ feat：Delete all attachments referenced by the note when deleting current note
 -   ✨ feat: Use the public api `app.fileManager.promptForDeletion(file)` to handle file deletion
 -   🐞 fix: the processing approach after deleting file not work ,and remove the promptDeletion method
-2023 年 4 月 8 日
+
+## Release 0.4.11
+
+-   2023/04/08
 -   🐞 fix: When deleting image by context menu in note,all images will be deleted as well.
--   update: `changelog.md`、`zh.md`、`readme.md`
--   Realease 0.4.11
+
+## Release 0.5.0
+
+-   2023/04/08
+-   ✨ feat: add context menu on file context to delete the file and its all attachments
