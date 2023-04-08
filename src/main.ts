@@ -31,9 +31,9 @@ export default class NathanDeletefile extends Plugin {
 			}
 		);
 		//  on(name: 'delete', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
-		this.registerEvent(app.vault.on('delete', () => {
-			deleteAllAttachmentsInCurrentFile(this);
-		}));
+		// this.registerEvent(app.vault.on('delete', () => {
+		// 	deleteAllAttachmentsInCurrentFile(this);
+		// },));
 		// register all commands in addCommand function
 		addCommand(this);
 
