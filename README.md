@@ -32,7 +32,7 @@ https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-
 8. When you delete a note, all attachment files referenced in the note are also deleted
     1. If the attachment is also referenced by other notes, it is not deleted.
     2. Delete an attachment if it is referenced only one or more times by the current note to be deleted
-    3. Delete method: Delete notes through the command provided by the plugin.
+    3. Delete method: Delete notes through the command provided by the plugin ; Right-click file menu delete
 
 ## Install
 
@@ -77,7 +77,8 @@ Please make sure that you select the destination for the deleted images under "F
 
 #### Delete attachments when deleting notes
 
-1. Open the command palete and type` Delete file and clear...`, and enter will delete the current note, and remove the attachments in the note, excluding attachments that are also referenced by other notes
+1. Way1: Open the command palete and type` Delete file and clear...`, and enter will delete the current note, and remove the attachments in the note, excluding attachments that are also referenced by other notes
+2. Way2: Right-click the file list file, in the pop-up menu, select `Delete the file and its all attachments`
 
 ## Development
 

@@ -29,7 +29,7 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 8. 当删除笔记时同时删除此笔记中引用的所有附件文件
     1. 如果附件被其他笔记也引用，则不删除。
     2. 如果附件仅被当前**需被删除的笔记**引用一次或多次，则删除。
-    3. 删除方式：通过插件提供的命令删除笔记。
+    3. 删除方式：通过插件提供的命令删除 ; 文件列表右键菜单删除
 
 ## 安装
 
@@ -77,7 +77,8 @@ https://www.bilibili.com/video/BV1U8411T7VH/?share_source=copy_web&vd_source=dda
 
 #### 删除附件当删除笔记
 
-1. 打开命令命板输入`Delete file and clear...`，回车会删除当前笔记，同时删除笔记中的附件，不包括被其他笔记也引用的附件
+1. 方式 1：打开命令命板输入`Delete file and clear...`，回车会删除当前笔记，同时删除笔记中的附件，不包括被其他笔记也引用的附件
+2. 方式 2：鼠标右键文件列表文件，在弹出的菜单中，选择`Delete the file and its all attachments`
 
 ## 开发
 
