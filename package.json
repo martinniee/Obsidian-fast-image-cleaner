@@ -1,6 +1,6 @@
 {
 	"name": "nl-fast-image-cleaner",
-	"version": "0.5.0",
+	"version": "0.5.1",
 	"description": "You can quickly delete image(or file,media) attachments and their reference links with the click of a button or right-click menu to adapt to different situations",
 	"main": "main.js",
 	"scripts": {
