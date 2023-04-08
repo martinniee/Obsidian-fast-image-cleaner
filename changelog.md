@@ -15,3 +15,8 @@
 
 -   2023/04/08
 -   ✨ feat: add context menu on file context to delete the file and its all attachments
+
+## Release 0.5.1
+
+-   2023/04/08
+-   🐞 fix: that delete the note by file menu causes unexpected files were deleted , restrict file menu only to be shown when the type of file is file than folder

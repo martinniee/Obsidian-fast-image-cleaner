@@ -1,10 +1,11 @@
 import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
-import { deleteAllAttachmentsInCurrentFile } from "./command/delete-all-attachments-in-current-file";
+import { delAllAttachsByFileMenu, delAllAttachsByCommand } from "./command/delAllAttachmentsOfTheNote";
 import { addCommand } from "./config/addCommand-config";
 import { NathanDeleteAttactmentSettingsTab } from "./settings";
 import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
 import { deleteNote } from "./utils/deleteNote";
+import { getMouseEventTarget } from "./utils/handlerEvent";
 
 
 
@@ -16,6 +17,8 @@ interface Listener {
 export default class NathanDeletefile extends Plugin {
 
 	settings: NathanDeleteAttactmentSettings;
+
+
 
 	async onload() {
 		console.log("Fast file Cleaner plugin loaded...");
@@ -34,27 +37,24 @@ export default class NathanDeletefile extends Plugin {
 		// add contextmenu on file context
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file) => {
-				const addMenuItem = (item: MenuItem) => {
-					item.
-						setTitle("Delete the file and its all attachments")
-						.setIcon('trash-2')
-						.setSection('danger')
-						;
-					item.onClick(async () => {
-						// 1.delete all attachment in the note
-						await deleteAllAttachmentsInCurrentFile(this);
-						new Notice("All attachments have been delelted")
-						// 2.delete current note
-						await deleteNote(app.workspace.getActiveFile() as TFile, this)
-					});
-				};
-				menu.addItem(addMenuItem);
+				if (file instanceof TFile) {
+					const addMenuItem = (item: MenuItem) => {
+						item.
+							setTitle("Delete the file and its all attachments")
+							.setIcon('trash-2')
+							.setSection('danger')
+							;
+						item.onClick(async () => {
+							// 1.delete all attachment in the note
+							await delAllAttachsByFileMenu(this, file);
+							// 2.delete current note
+							await deleteNote(app.workspace.getActiveFile() as TFile, this)
+						});
+					};
+					menu.addItem(addMenuItem);
+				}
 			})
 		);
-		//  on(name: 'delete', callback: (file: TAbstractFile) => any, ctx?: any): EventRef;
-		// this.registerEvent(app.vault.on('delete', () => {
-		// 	deleteAllAttachmentsInCurrentFile(this);
-		// },));
 		// register all commands in addCommand function
 		addCommand(this);
 
@@ -93,6 +93,13 @@ export default class NathanDeletefile extends Plugin {
 				this.onClick.bind(this)
 			)
 		);
+		/* 	this.register(
+				this.onElement(
+					document,
+					"contextmenu" as keyof HTMLElementEventMap,
+					"div.nav-file",
+					this.IsdeleteNoteWithItsAllAttachments.bind(this)
+				)) */
 	}
 
 
@@ -151,12 +158,11 @@ export default class NathanDeletefile extends Plugin {
 	 * 鼠标点击事件
 	 */
 	onClick(event: MouseEvent) {
-		event.preventDefault();
+		const target = getMouseEventTarget(event);
+		const nodeType = target.localName;
 
-		const target = event.target as HTMLElement;
 		const currentMd = app.workspace.getActiveFile() as TFile;
 
-		const nodeType = target.localName;
 		const menu = new Menu();
 		// target deleted img file base name
 		const RegFileBaseName = new RegExp(/\/?([^\/\n]+\.\w+)/, 'm');
@@ -176,8 +182,13 @@ export default class NathanDeletefile extends Plugin {
 		menu.showAtPosition({ x: event.pageX, y: event.pageY - 40 });
 		this.app.workspace.trigger("NL-fast-file-cleaner:contextmenu", menu);
 	}
-}
-function deleteAllAttachmentsInCurrentFilee() {
-	throw new Error("Function not implemented.");
-}
 
+	/* IsdeleteNoteWithItsAllAttachments = async (event: MouseEvent):Promise<boolean> => {
+		// 1.get mouse event target
+		const nav_file_title = getMouseEventTarget(event);
+		const data_path = nav_file_title.getAttribute('data-path') as string;
+		const isMdFile = data_path.match(/.*\.md/) !== null;
+		// 2.if the target is a element  representing .md file ,then delete the note
+		return isMdFile ? true : false;
+	} */
+}

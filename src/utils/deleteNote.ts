@@ -17,7 +17,7 @@ export const deleteNote = async (
         }
     } catch (error) {
         console.error(error);
-        new Notice("Faild to delelte the image !", SUCCESS_NOTICE_TIMEOUT);
+        new Notice("Faild to delelte the note !", SUCCESS_NOTICE_TIMEOUT);
 
     }
 };

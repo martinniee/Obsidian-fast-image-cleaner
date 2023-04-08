@@ -1,5 +1,5 @@
 import { Notice, TFile } from "obsidian";
-import { deleteAllAttachmentsInCurrentFile } from "src/command/delete-all-attachments-in-current-file";
+import { delAllAttachsByCommand } from "src/command/delAllAttachmentsOfTheNote";
 import NathanDeletefile from "src/main";
 import { deleteNote } from "src/utils/deleteNote";
 
@@ -9,8 +9,7 @@ export const addCommand = (myPlugin: NathanDeletefile) => {
         name: 'Delete file and clear all attachments in current file',
         callback: async () => {
             // 1.delete all attachment in the note
-            await deleteAllAttachmentsInCurrentFile(myPlugin);
-            new Notice("All attachments have been delelted")
+            await delAllAttachsByCommand(myPlugin);
             // 2.delete current note
             await deleteNote(app.workspace.getActiveFile() as TFile, myPlugin)
         }

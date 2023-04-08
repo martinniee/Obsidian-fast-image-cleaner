@@ -1,15 +1,13 @@
-import { Notice, TFile } from "obsidian";
+import { TFile } from "obsidian";
 import NathanDeletefile from "src/main";
 import { deleteAttachmentWhenDeleteNote } from "src/utils/deleteAttachmentWhenDeleteNote";
-const SUCCESS_NOTICE_TIMEOUT = 10000;
-
 /**
- * Delete all attachments referenced by the deleted note
+ * delAllAttachsByCommand
  * 
  * 1. get current file
  * 2. get TFile of the attachment referenced by file
  */
-export const deleteAllAttachmentsInCurrentFile = async (plugin: NathanDeletefile): Promise<TFile | undefined> => {
+export const delAllAttachsByCommand = async (plugin: NathanDeletefile,): Promise<TFile | undefined> => {
     // 1. get current file
     const activeMd: TFile = app.workspace.getActiveFile() as TFile;
     const resolvedLinks = app.metadataCache.resolvedLinks;
@@ -53,4 +51,33 @@ const isReferencedByOtherNotes = (attachPath: string, currentMd: TFile): boolean
         }
     }
     return flag;
+}
+
+/**
+ * delAllAttachsByFileMenu
+ * 
+ * @param plugin 
+ * @param currentFile 
+ * @returns 
+ */
+export const delAllAttachsByFileMenu = async (plugin: NathanDeletefile, currentFile: TFile) => {
+    const resolvedLinks = app.metadataCache.resolvedLinks;
+    for (const [mdFile, links] of Object.entries(resolvedLinks)) {
+        if (currentFile?.path === mdFile) {
+            for (const [filePath, nr] of Object.entries(links)) {
+                // if the attachment in the note has been referenced by other notes  simultaneously
+                //  ,skip it.
+                if (isReferencedByOtherNotes(filePath, currentFile)) continue;
+                try {
+                    // 2. get TFile of the attachment referenced by file
+                    const AttachFile: TFile = app.vault.getAbstractFileByPath(filePath) as TFile;
+                    if (AttachFile instanceof TFile) {
+                        await deleteAttachmentWhenDeleteNote(AttachFile, plugin);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    }
 }
