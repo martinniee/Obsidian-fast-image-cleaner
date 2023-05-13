@@ -79,17 +79,8 @@ export default class NathanDeletefile extends Plugin {
 		this.register(
 			this.onElement(
 				document,
-				"click" as keyof HTMLElementEventMap,
-				".btn-delete",
-				this.onClick.bind(this)
-			)
-		);
-
-		this.register(
-			this.onElement(
-				document,
 				"contextmenu" as keyof HTMLElementEventMap,
-				"img, iframe, video, div.file-embed-title",
+				"img, iframe, video, div.file-embed-title,audio",
 				this.onClick.bind(this)
 			)
 		);
@@ -167,7 +158,7 @@ export default class NathanDeletefile extends Plugin {
 		// target deleted img file base name
 		const RegFileBaseName = new RegExp(/\/?([^\/\n]+\.\w+)/, 'm');
 		let imgPath = '';
-		const delTargetType = ['img', 'iframe', 'video', 'div'];
+		const delTargetType = ['img', 'iframe', 'video', 'div', 'audio'];
 
 
 		if (delTargetType.includes(nodeType)) {

@@ -100,8 +100,8 @@ export const isRemove = (
 /**
  * 	通过当前md文件和图片名 获取 图片文件对象   ，类型为TFile
  * 
-		@param currentMd  当前需要被删除的curMd所在的markdown文件
-		@param FileBaseName  当前需要被删除的curMd名 name.extension
+	@param currentMd  当前需要被删除的curMd所在的markdown文件
+	@param FileBaseName  当前需要被删除的curMd名 name.extension
  *  @returns  AttachFile
  */
 export const getFileByBaseName = (
