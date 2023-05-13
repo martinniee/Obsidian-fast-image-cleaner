@@ -1,20 +1,9 @@
+import NathanImageCleaner from 'src/main';
 import { TFile, Notice } from "obsidian";
 import { imageReferencedState } from "./enum/imageReferencedState";
 import { resultDetermineImageDeletion as deletionResult } from "./interface/resultDetermineImageDeletion";
-import NathanDeletefile from "./main";
 import { LogsModal } from "./modals";
 const SUCCESS_NOTICE_TIMEOUT = 1800;
-/**
- * 移除元素的dom结构从文档中
- * @param target 需要被移除的元素（img）
- */
-export const removeImgDom = (target: HTMLElement) => {
-	const img_div: HTMLDivElement = target.parentElement as HTMLDivElement;
-	const content_container: HTMLDivElement = target.parentElement
-		?.parentElement as HTMLDivElement;
-	content_container.removeChild(img_div);
-};
-
 /**
  * Remove reference link
  *
@@ -82,7 +71,7 @@ export const isRemove = (
 				refNum++;
 				// if the deleted target image referenced by current note more than once
 				if (nr > 1) {
-					result.state = imageReferencedState.MutipTime;
+					result.state = imageReferencedState.MORE;
 					result.mdPath.push(mdFile);
 					return result;
 				}
@@ -91,9 +80,9 @@ export const isRemove = (
 		}
 	}
 	if (refNum > 1) {
-		result.state = imageReferencedState.More;
+		result.state = imageReferencedState.MUTIPLE;
 	} else {
-		result.state = imageReferencedState.Once;
+		result.state = imageReferencedState.ONCE;
 	}
 	return result;
 };
@@ -138,7 +127,7 @@ export const getFileByBaseName = (
  */
 export const ClearAttachment = async (
 	FileBaseName: string,
-	plugin: NathanDeletefile
+	plugin: NathanImageCleaner
 ) => {
 	const deleteOption = plugin.settings.deleteOption;
 	const currentMd = app.workspace.getActiveFile() as TFile;
@@ -170,7 +159,7 @@ export const ClearAttachment = async (
 export const handlerDelFile = (
 	FileBaseName: string,
 	currentMd: TFile,
-	plugin: NathanDeletefile
+	plugin: NathanImageCleaner
 ) => {
 	let logs: string[];
 	let modal;

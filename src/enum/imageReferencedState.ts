@@ -1,5 +1,5 @@
 export enum imageReferencedState {
-    Once = 0, // only reference once
-    More = 1, // reference by mutiple notes
-    MutipTime = 2,
+    ONCE = 0, // only referenced once
+    MUTIPLE = 1, // referenced by mutilple notes
+    MORE = 2, // referenced more than once
 }

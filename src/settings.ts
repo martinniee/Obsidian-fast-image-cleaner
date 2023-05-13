@@ -1,26 +1,26 @@
-import NathanDeletefile from './main';
+import NathanImageCleaner from './main';
 import { PluginSettingTab, Setting, App } from 'obsidian';
 
 
 
-export interface NathanDeleteAttactmentSettings {
+export interface NathanImageCleanerSettings {
     deleteOption: string;
     logsModal: boolean;
 }
 
-export const DEFAULT_SETTINGS: NathanDeleteAttactmentSettings = {
+export const DEFAULT_SETTINGS: NathanImageCleanerSettings = {
     deleteOption: '.trash',
     logsModal: true,
 
 };
 
 
-export class NathanDeleteAttactmentSettingsTab extends PluginSettingTab {
+export class NathanImageCleanerSettingsTab extends PluginSettingTab {
 
-    plugin: NathanDeletefile;
+    plugin: NathanImageCleaner;
 
 
-    constructor(app: App, plugin: NathanDeletefile) {
+    constructor(app: App, plugin: NathanImageCleaner) {
         super(app, plugin);
         this.plugin = plugin;
     }

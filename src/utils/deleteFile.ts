@@ -1,10 +1,13 @@
 import { Notice, TFile } from "obsidian";
-import NathanDeletefile from "src/main";
+import NathanImageCleaner from "src/main";
 const SUCCESS_NOTICE_TIMEOUT = 1800;
-
-export const deleteAttachmentWhenDeleteNote = async (
+/**
+ * Delete attachment
+ * @param file 
+ */
+export const deleteAttach = async (
     file: TFile,
-    plugin: NathanDeletefile
+    plugin: NathanImageCleaner
 ) => {
     const deleteOption = plugin.settings.deleteOption;
     try {
@@ -17,8 +20,18 @@ export const deleteAttachmentWhenDeleteNote = async (
         }
     } catch (error) {
         console.error(error);
-        new Notice("Faild to delelte the image !", SUCCESS_NOTICE_TIMEOUT);
+        new Notice("Faild to delete the attachment !", SUCCESS_NOTICE_TIMEOUT);
 
     }
+};
+/**
+ * Delete note
+ * @param file 
+ */
+export const deleteNote = (
+    file: TFile,
+) => {
+    // @ts-ignore
+    app.fileManager.promptForDeletion(file)
 };
 

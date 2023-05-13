@@ -1,11 +1,11 @@
 import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
-import { delAllAttachsByFileMenu, delAllAttachsByCommand } from "./command/delAllAttachmentsOfTheNote";
 import { addCommand } from "./config/addCommand-config";
-import { NathanDeleteAttactmentSettingsTab } from "./settings";
-import { NathanDeleteAttactmentSettings, DEFAULT_SETTINGS } from "./settings";
+import { NathanImageCleanerSettingsTab } from "./settings";
+import { NathanImageCleanerSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
-import { deleteNote } from "./utils/deleteNote";
 import { getMouseEventTarget } from "./utils/handlerEvent";
+import { deleteAllAttachs } from './options/deleleAllAttachsInTheNote';
+import { deleteNote } from "./utils/deleteFile";
 
 
 
@@ -14,16 +14,15 @@ interface Listener {
 	(this: Document, ev: Event): any;
 }
 
-export default class NathanDeletefile extends Plugin {
+export default class NathanImageCleaner extends Plugin {
 
-	settings: NathanDeleteAttactmentSettings;
-
+	settings: NathanImageCleanerSettings;
 
 
 	async onload() {
 		console.log("Fast file Cleaner plugin loaded...");
 
-		this.addSettingTab(new NathanDeleteAttactmentSettingsTab(this.app, this));
+		this.addSettingTab(new NathanImageCleanerSettingsTab(this.app, this));
 
 		await this.loadSettings();
 		this.registerDocument(document);
@@ -46,9 +45,9 @@ export default class NathanDeletefile extends Plugin {
 							;
 						item.onClick(async () => {
 							// 1.delete all attachment in the note
-							await delAllAttachsByFileMenu(this, file);
+							deleteAllAttachs(this);
 							// 2.delete current note
-							await deleteNote(app.workspace.getActiveFile() as TFile, this)
+							deleteNote(app.workspace.getActiveFile() as TFile)
 						});
 					};
 					menu.addItem(addMenuItem);
