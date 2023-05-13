@@ -6,7 +6,7 @@ This plugin allows you to quickly remove image attachment and referenced link fr
 
 ## Demo
 
-https://user-images.githubusercontent.com/55736512/218007296-eba24cf9-b3bd-40b5-a1b6-32efee1fd396.mp4
+.....
 
 ## Features
 
