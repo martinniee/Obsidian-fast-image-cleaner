@@ -1,5 +1,5 @@
 import NathanImageCleaner from "src/main";
-import { TFile, Notice } from "obsidian";
+import { TFile, Notice, TFolder } from "obsidian";
 import { imageReferencedState } from "./enum/imageReferencedState";
 import { resultDetermineImageDeletion as deletionResult } from "./interface/resultDetermineImageDeletion";
 import { LogsModal } from "./modals";
@@ -210,8 +210,9 @@ export const ClearAttachment = async (
 	const deleteOption = plugin.settings.deleteOption;
 	const currentMd = app.workspace.getActiveFile() as TFile;
 	const file = getFileByBaseName(currentMd, FileBaseName) as TFile;
-	// delImgRefLink(FileBaseName, app.workspace.getActiveFile() as TFile).process();
 	await delImgRefLink.process({ FileBaseName });
+	const delFileFolder = onlyOneFileExists(file);
+	const fileFolder = getFileParentFolder(file) as TFolder;
 	try {
 		if (deleteOption === ".trash") {
 			await app.vault.trash(file, false);
@@ -219,12 +220,15 @@ export const ClearAttachment = async (
 				"Image moved to Obsidian Trash !",
 				SUCCESS_NOTICE_TIMEOUT
 			);
+			if (delFileFolder) await app.vault.trash(fileFolder, false);
 		} else if (deleteOption === "system-trash") {
 			await app.vault.trash(file, true);
 			new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
+			if (delFileFolder) await app.vault.trash(fileFolder, true);
 		} else if (deleteOption === "permanent") {
 			await app.vault.delete(file);
 			new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
+			if (delFileFolder) await app.vault.delete(fileFolder, true);
 		}
 	} catch (error) {
 		console.error(error);
@@ -259,4 +263,26 @@ export const handlerDelFile = (
 		default:
 			break;
 	}
+};
+/**
+ *
+ * @param file target deleted file
+ * @returns parent folder or undefiend
+ */
+const getFileParentFolder = (file: TFile): TFolder | undefined => {
+	if (file instanceof TFile) {
+		if (file.parent instanceof TFolder) {
+			return file.parent;
+		}
+	}
+	return;
+};
+/**
+ *
+ * @param file
+ * @returns
+ */
+const onlyOneFileExists = (file: TFile): boolean => {
+	const fileFolder = getFileParentFolder(file) as TFolder;
+	return fileFolder.children.length === 1;
 };
