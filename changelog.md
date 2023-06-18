@@ -21,3 +21,7 @@
 -   ✨ feat: support embed audio deletion
 -   ✨ feat: delete all attachments and clear all attachment links in the note for #6
 -   refactor: ...
+
+## Release 0.6.1 2023/06/18
+
+-   🦄 refactor: add a tool class for text-processing, and with it to refactor right-click image and link deletion operation. fixed [#9](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/9) , [#5](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/5)
