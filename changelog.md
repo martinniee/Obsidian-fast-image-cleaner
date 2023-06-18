@@ -36,3 +36,7 @@
     storing image attachments. as only if one file exists , which is also the current deleted file after deletion
 -   ✨ feat: add as many attachment link removing of file type as possiable
 -   ✨ feat: automatically delete parent attachment folder after the delete file and its all attachments operation
+
+## Release 0.7.1 2023/06/19
+
+-   🐞 fix: cannot remove link when mutiple-linked exists in mutiple note
