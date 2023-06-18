@@ -106,7 +106,13 @@ export const delImgRefLink = new fileContentsProcess(
 			if (match[0].includes("%20")) {
 				if (line.replace(/%20/g, " ").includes(imgBasePath)) {
 					return "DELETE_LINE";
+				} else {
+					return line;
 				}
+			} else if (line.includes(imgBasePath)) {
+				return "DELETE_LINE";
+			} else {
+				return line;
 			}
 		} else if (line.includes(imgBasePath) && wikiLinkRegex.test(line)) {
 			return "DELETE_LINE";
