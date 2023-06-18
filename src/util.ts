@@ -98,7 +98,7 @@ export class fileContentsProcess {
 export const delImgRefLink = new fileContentsProcess(
 	async (line, metaData, Plugin, params) => {
 		let imgBasePath = params.FileBaseName as string;
-		const mdLinkRegex = /!\[.*?\]\((?<imgPath>.*?)\.(?:[a-zA-Z]+)\)/;
+		const mdLinkRegex = /!\[.*?\]\((?<imgPath>.*?)\.(?:[a-zA-Z0-9]+)\)/;
 		const wikiLinkRegex = /!\[\[.+\.(?:[a-zA-Z]+)(?: *\| *.*?)*\]\]/;
 
 		if (mdLinkRegex.test(line)) {
