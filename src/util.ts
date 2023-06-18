@@ -269,7 +269,7 @@ export const handlerDelFile = (
  * @param file target deleted file
  * @returns parent folder or undefiend
  */
-const getFileParentFolder = (file: TFile): TFolder | undefined => {
+export const getFileParentFolder = (file: TFile): TFolder | undefined => {
 	if (file instanceof TFile) {
 		if (file.parent instanceof TFolder) {
 			return file.parent;
