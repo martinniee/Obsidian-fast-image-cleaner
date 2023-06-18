@@ -29,3 +29,10 @@
 ## Release 0.6.2 2023/06/18
 
 -   🐞 fix: cannot remove link when reference link is in markdown style
+
+## Release 0.7.0 2023/06/19
+
+-   ✨ feat: automatically delete the folder as attachments folder
+    storing image attachments. as only if one file exists , which is also the current deleted file after deletion
+-   ✨ feat: add as many attachment link removing of file type as possiable
+-   ✨ feat: automatically delete parent attachment folder after the delete file and its all attachments operation
