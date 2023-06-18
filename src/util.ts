@@ -1,46 +1,119 @@
-import NathanImageCleaner from 'src/main';
+import NathanImageCleaner from "src/main";
 import { TFile, Notice } from "obsidian";
 import { imageReferencedState } from "./enum/imageReferencedState";
 import { resultDetermineImageDeletion as deletionResult } from "./interface/resultDetermineImageDeletion";
 import { LogsModal } from "./modals";
 const SUCCESS_NOTICE_TIMEOUT = 1800;
+export interface metaData {
+	[propName: string]: {
+		value: any;
+	};
+}
+export interface processFunc {
+	(
+		line: string,
+		metaData: metaData,
+		plugin: NathanImageCleaner,
+		params: params,
+		index?: number
+	): Promise<string | void>;
+}
+export interface params {
+	[param: string]: any;
+}
 /**
- * Remove reference link
- *
- * @param imagePath  the path of the current deleted image without subpath,format as  name.extension
- * @param mdFile  the markdown file containing the deleted image
+ * File contents processing class
  */
-export const removeReferenceLink = async (imagePath: string, mdFile: TFile) => {
-	// Escape . to \. for regular expresion
-	const origin_filecontents = await app.vault.read(mdFile);
-	const new_filecontents: string[] = [];
-	const fileContents_array = origin_filecontents.split("\n");
-	for (const fileContent of fileContents_array) {
-		const regMdRefLink = new RegExp(
-			"!\\[(.*)?\\]\\(((.*\\/)+)?" + imagePath + "\\)",
-			"gm"
+export class fileContentsProcess {
+	#processFunc: processFunc;
+	#delay: number = 1000;
+	#metaData: metaData;
+	#line: string;
+	constructor(
+		callback: processFunc, // function for core-logic for  text processsing
+		metaData: metaData = {},
+		delay: number = 1000 // if no value is passed, set 1000 as default
+	) {
+		this.#processFunc = callback;
+		this.#delay = delay;
+		this.#metaData = metaData as metaData;
+	}
+
+	async process(params: params, plugin?: NathanImageCleaner): Promise<any> {
+		const activeFile: TFile = app.workspace.getActiveFile() as TFile;
+		const fileContents = (await app.vault.read(activeFile)).split("\n");
+		let newFileContents: string[] = [];
+		this.resetMetaData();
+		for (let index = 0; index < fileContents.length; index++) {
+			this.#line = fileContents[index];
+			let result = (await this.#processFunc(
+				this.#line,
+				this.#metaData,
+				plugin as NathanImageCleaner,
+				params as params,
+				index as number
+			)) as any;
+			newFileContents.push(result);
+		}
+		newFileContents = newFileContents.filter(
+			(item) => item != "DELETE_LINE"
 		);
-		const regWikiRefLink2 = new RegExp(
-			"!\\[\\[.*?" + imagePath + "(\\|\\d*)?\\]\\]",
-			"gm"
-		);
-		// Decode  when current line contains cleared image reference in markdown style with %20(space) or chinese characters
-		const fileContent_decode = decodeURI(fileContent);
-		const isIncludeImage = fileContent_decode.includes(imagePath);
-		const isMarkdownStyle = fileContent_decode.match(regMdRefLink) != null;
-		const isWikiStyle = fileContent_decode.match(regWikiRefLink2) != null;
-		if (isIncludeImage && isMarkdownStyle) {
-			new_filecontents.push(fileContent_decode.replace(regMdRefLink, ""));
-		} else if (isIncludeImage && isWikiStyle) {
-			new_filecontents.push(
-				fileContent_decode.replace(regWikiRefLink2, "")
-			);
-		} else {
-			new_filecontents.push(fileContent);
+		app.vault.adapter.write(activeFile.path, newFileContents.join("\n"));
+		setTimeout(() => {
+			return "";
+		}, this.#delay);
+	}
+	resetMetaData(): void {
+		for (const prop in this.#metaData) {
+			if (this.#metaData[prop].value instanceof Array) {
+				// Reset all values in prop.value preventing heading number increment
+				this.#metaData[prop].value = this.#metaData[prop].value.map(
+					(item: any) => {
+						if (typeof item === "number") {
+							return 0;
+						} else if (typeof item === "string") {
+							return "";
+						}
+						return item;
+					}
+				);
+			}
+			if (typeof this.#metaData[prop].value === "number") {
+				this.#metaData[prop].value = 0;
+			}
+			if (typeof this.#metaData[prop].value === "string") {
+				this.#metaData[prop].value = "0";
+			}
+			if (typeof this.#metaData[prop].value === "boolean") {
+				this.#metaData[prop].value = false;
+			}
 		}
 	}
-	app.vault.adapter.write(mdFile.path, new_filecontents.join("\n"));
-};
+}
+/**
+ * 文章中单行图片链接数量
+ * 1. 一行中仅有一个图片引用链接 (解决)
+ * 2. 一行中由多个图片引用链接 （未解决）
+ */
+export const delImgRefLink = new fileContentsProcess(
+	async (line, metaData, Plugin, params) => {
+		let imgBasePath = params.FileBaseName as string;
+		const mdLinkRegex = /!\[.*?\]\((?<imgPath>.*?)\.(?:[a-zA-Z]+)\)/;
+		const wikiLinkRegex = /!\[\[.+\.(?:[a-zA-Z]+)(?: *\| *.*?)*\]\]/;
+
+		if (mdLinkRegex.test(line)) {
+			let match = line.match(mdLinkRegex) as RegExpExecArray;
+			if (match[0].includes("%20")) {
+				if (line.replace(/%20/g, " ").includes(imgBasePath)) {
+					return "DELETE_LINE";
+				}
+			}
+		} else if (line.includes(imgBasePath) && wikiLinkRegex.test(line)) {
+			return "DELETE_LINE";
+		}
+		return line;
+	}
+);
 /**
  *
  * @param FileBaseName format is as name.extension
@@ -111,7 +184,6 @@ export const getFileByBaseName = (
 					} catch (error) {
 						new Notice(` cannot get the image file`);
 						console.error(error);
-						return undefined;
 					}
 				}
 			}
@@ -132,11 +204,15 @@ export const ClearAttachment = async (
 	const deleteOption = plugin.settings.deleteOption;
 	const currentMd = app.workspace.getActiveFile() as TFile;
 	const file = getFileByBaseName(currentMd, FileBaseName) as TFile;
-	removeReferenceLink(FileBaseName, app.workspace.getActiveFile() as TFile);
+	// delImgRefLink(FileBaseName, app.workspace.getActiveFile() as TFile).process();
+	await delImgRefLink.process({ FileBaseName });
 	try {
 		if (deleteOption === ".trash") {
 			await app.vault.trash(file, false);
-			new Notice("Image moved to Obsidian Trash !", SUCCESS_NOTICE_TIMEOUT);
+			new Notice(
+				"Image moved to Obsidian Trash !",
+				SUCCESS_NOTICE_TIMEOUT
+			);
 		} else if (deleteOption === "system-trash") {
 			await app.vault.trash(file, true);
 			new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
@@ -147,7 +223,6 @@ export const ClearAttachment = async (
 	} catch (error) {
 		console.error(error);
 		new Notice("Faild to delelte the image !", SUCCESS_NOTICE_TIMEOUT);
-
 	}
 };
 /**
@@ -171,12 +246,11 @@ export const handlerDelFile = (
 			break;
 		case 1:
 		case 2:
-			// referenced by eithor only note or other mutiple notes more than once 
+			// referenced by eithor only note or other mutiple notes more than once
 			logs = isRemove(FileBaseName).mdPath as string[];
 			modal = new LogsModal(currentMd, state, FileBaseName, logs, app);
 			modal.open();
 		default:
 			break;
 	}
-
 };

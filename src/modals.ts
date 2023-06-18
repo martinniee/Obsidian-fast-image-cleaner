@@ -1,5 +1,5 @@
 import { Modal, App, TFile } from "obsidian";
-import { removeReferenceLink } from "./util";
+import { delImgRefLink } from "./util";
 
 export class LogsModal extends Modal {
     textToView: string[];
@@ -22,8 +22,6 @@ export class LogsModal extends Modal {
     }
 
     getLog(): string {
-        console.log("@this.textToView: ", this.textToView);
-
         // current note
         const CurFirstMd: string = this.textToView.shift() as string;
         const curMdLog: string =
@@ -88,8 +86,8 @@ export class LogsModal extends Modal {
             "Continue to remove the reference link to the current attachment in the current document"
         );
         removeLinkButton.addClass('mod-warning');
-        removeLinkButton.addEventListener("click", () => {
-            removeReferenceLink(this.FileBaseName, this.currentMd);
+        removeLinkButton.addEventListener("click", async () => {
+            await delImgRefLink.process({filename:this.FileBaseName});
             myModal.close();
         });
     }
