@@ -25,3 +25,7 @@
 ## Release 0.6.1 2023/06/18
 
 -   🦄 refactor: add a tool class for text-processing, and with it to refactor right-click image and link deletion operation. fixed [#9](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/9) , [#5](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/5)
+
+## Release 0.6.2 2023/06/18
+
+-   🐞 fix: cannot remove link when reference link is in markdown style
