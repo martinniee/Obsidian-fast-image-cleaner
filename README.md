@@ -2,37 +2,65 @@
 
 [中文](./ZH.md) / EN
 
-This plugin allows you to quickly remove image attachment and referenced link from your document. You can quickly delete image(or file,media) attachment and their reference link with right-click menu.
+This plugin can fast delete image (or video, audio, file .....) attachment and remove referenced link by right clicking on the context menu option. 
 
 ## Demo
 
-.....
+//The feature has been updated. waiting...........
 
 ## Features
 
-1. Delete image attachment and its reference link when right-click on image ,then click the delete item.
-2. Scenarios when deleting image
-    1. If the image only is referenced by current note,then delete image attachment and remove link.
-    2. If the image is referenced by current note wtih more times,then popup a window.User should remove the link by manually (avoiding deleted image attachment linked by other notes)
-    3. If the image is referenced by mutiple notes,then popup a window.User could go on to remove the link by clicking the Close button. (avoiding deleted image attachment linked by other notes)
-3. Support both `makdown` and `wiki` link style.
-4. Support three various of internal link types, ( [details](https://help.obsidian.md/Linking+notes+and+files/Internal+links) )
-    1. Relative path to file
-    2. Shortest path when possible
-    3. Absolute path in vault
-5. Supported image format: `jpg, jpeg, png, gif, svg, bmp`
-6. Support processing approach after deleting image
-    1. Move to system trash
-    2. Move to Obsidian trash (.trash folder)
-    3. Permanently delete
-7. Support more file types, in addition to supporting img type attachments, more types of attachment files (currently does not support right-click to remove `PDF` attachments)
-    1. Image: img、gif、png、jpeg、svg, bmp
-    2. FIle: docx、pptx、html、epub...
-    3. Video: mp4、mkv...
-8. When you delete a note, all attachment files referenced in the note are also deleted
-    1. If the attachment is also referenced by other notes, it is not deleted.
-    2. Delete an attachment if it is referenced only one or more times by the current note to be deleted
-    3. Delete method: Delete notes through the command provided by the plugin ; Right-click file menu delete
+Feature intro:
+
+1. Right-click image to delete attachment and links, and folder  as appropriate.
+
+2. Right-click file list to delete notes and referenced attachments, and folder  as appropriate.
+
+Feature Details:
+
+1. Support `markdown ` and `wiki ` link style image link removal
+
+2. Supports three different formats of **Internal link types** ([Details](https://help.obsidian.md/Linking+notes+and+files/Internal+links))
+
+   1. Shortest path when possible
+   2. Relative path to file
+   3. Absolute path to vault
+
+3. Support processing approach after deleting image
+
+   1. Move to system trash
+
+   2. Move to Obsidian trash (.trash folder)
+
+   3. Permanently delete
+
+4. In addition to supporting `img` type attachments, there are other types of attachment files such as images, videos, audio recordings, documents... (currently PDF attachments cannot be deleted by right-clicking).
+
+   1. img type: img、gif、png、jpeg，svg， bmp...
+
+   1. file type: docx、pptx、html、epub...
+
+   1. media type: mp4、mkv...
+
+
+
+> Explanation of image attachment and reference link deletion:
+>
+> 1. If the image is only referenced **once** in the current note, it will be deleted directly along with its link.
+> 2. If the image is referenced **multiple times** in the current note, a prompt window will appear asking the user to manually remove the link without deleting the image. (This is to prevent accidental deletion of the image.)
+> 3. If the image is referenced by **multiple notes**, a prompt window will appear. The user can click the `close` button to continue removing the image reference link from the **current document**, without deleting the image. (This is to prevent accidental deletion of the image.)
+>
+> Explanation of automatic deletion of referenced attachments when deleting a note:
+>
+> 1. If the attachment is referenced by other notes, it will not be deleted.
+> 2. If the attachment is only referenced once or multiple times in the **note to be deleted**, it will be deleted.
+> 3. Deletion method: using the provided command of the plugin, or by right-clicking on the file list.
+>
+> Explanation of automatic deletion of attachment folder depending on the situation:
+>
+> - The parent directory of an attachment (usually an attachment folder) will be deleted only if the attachment is referenced once in the note to be deleted, and the attachment folder is empty after the attachment is deleted.
+
+
 
 ## Install
 
@@ -75,10 +103,7 @@ Please make sure that you select the destination for the deleted images under "F
 (2)In reading mode
 ![image-20230215115818647](assets/ZH-images/image-20230215115818647.png)
 
-#### Delete attachments when deleting notes
 
-1. Way1: Open the command palete and type` Delete file and clear...`, and enter will delete the current note, and remove the attachments in the note, excluding attachments that are also referenced by other notes
-2. Way2: Right-click the file list file, in the pop-up menu, select `Delete the file and its all attachments`
 
 ## Development
 
@@ -92,4 +117,5 @@ This plugin follows the structure of the [Obsidian Sample Plugin](https://github
 
 ## Plan
 
--   [ ] achieve [#3](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/3)
+-   [ ] Enable right-clicking on any type of embedded attachment to reveal contextmenu options in the file list.
+
