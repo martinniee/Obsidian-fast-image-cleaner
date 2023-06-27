@@ -40,3 +40,8 @@
 ## Release 0.7.1 2023/06/19
 
 -   🐞 fix: cannot remove link when mutiple-linked exists in mutiple note
+
+## Release 0.8.0 2023/06/27
+
+-   📃 docs: update readme.md
+-   ✨ feat: add the Notice prompt for attachment folder deletion of righ-click image deletion
