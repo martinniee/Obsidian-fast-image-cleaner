@@ -99,8 +99,7 @@ export const delImgRefLink = new fileContentsProcess(
 	async (line, metaData, Plugin, params) => {
 		let imgBasePath = params.FileBaseName as string;
 		const mdLinkRegex = /!\[.*?\]\((?<imgPath>.*?)\.(?:[a-zA-Z0-9]+)\)/;
-		const wikiLinkRegex = /!\[\[.+\.(?:[a-zA-Z]+)(?: *\| *.*?)*\]\]/;
-
+		const wikiLinkRegex = /!\[\[.+\.(?:[a-zA-Z0-9]+)(?: *\| *.*?)*\]\]/;
 		if (mdLinkRegex.test(line)) {
 			let match = line.match(mdLinkRegex) as RegExpExecArray;
 			if (match[0].includes("%20")) {
@@ -220,15 +219,24 @@ export const ClearAttachment = async (
 				"Image moved to Obsidian Trash !",
 				SUCCESS_NOTICE_TIMEOUT
 			);
-			if (delFileFolder) await app.vault.trash(fileFolder, false);
+			if (delFileFolder) {
+				await app.vault.trash(fileFolder, false);
+				new Notice("Attachment folder have been deleted!", 3000);
+			}
 		} else if (deleteOption === "system-trash") {
 			await app.vault.trash(file, true);
 			new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
-			if (delFileFolder) await app.vault.trash(fileFolder, true);
+			if (delFileFolder) {
+				await app.vault.trash(fileFolder, true);
+				new Notice("Attachment folder have been deleted!", 3000);
+			}
 		} else if (deleteOption === "permanent") {
 			await app.vault.delete(file);
 			new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
-			if (delFileFolder) await app.vault.delete(fileFolder, true);
+			if (delFileFolder) {
+				await app.vault.delete(fileFolder, true);
+				new Notice("Attachment folder have been deleted!", 3000);
+			}
 		}
 	} catch (error) {
 		console.error(error);
