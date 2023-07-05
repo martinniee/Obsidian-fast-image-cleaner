@@ -18,6 +18,8 @@ export const deleteAllAttachs = async (plugin: NathanImageCleaner) => {
 			let fileCount = 0;
 			let flag = false;
 			for (const [filePath, nr] of Object.entries(links)) {
+				// If the filePath ends with '.md' ,which indicates the file is markdown file, and do not delete it
+				if (filePath.match(/.*\.md$/m)) continue;
 				attachsPaths.push(filePath);
 				// if the attachment in the note has been referenced by other notes  simultaneously skip it.
 				if (isReferencedByOtherNotes(filePath, activeMd)) continue;
