@@ -45,3 +45,8 @@
 
 -   📃 docs: update readme.md
 -   ✨ feat: add the Notice prompt for attachment folder deletion of righ-click image deletion
+
+## Release 0.8.1 2023/07/06
+
+-   🐞 fix: the markdown file as a attachment in other files wiil be deleted when executing the 'Delete the file and its.... ' command
+-   🐞 fix: [#10](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/10)
