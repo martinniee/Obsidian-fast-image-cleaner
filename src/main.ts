@@ -4,20 +4,14 @@ import { NathanImageCleanerSettingsTab } from "./settings";
 import { NathanImageCleanerSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./util";
 import { getMouseEventTarget } from "./utils/handlerEvent";
-import { deleteAllAttachs } from './options/deleleAllAttachsInTheNote';
-import { deleteNote } from "./utils/deleteFile";
-
-
+import { DeleteAllLogsModal } from "./modals/deletionPrompt";
 
 interface Listener {
-
 	(this: Document, ev: Event): any;
 }
 
 export default class NathanImageCleaner extends Plugin {
-
 	settings: NathanImageCleanerSettings;
-
 
 	async onload() {
 		console.log("Fast file Cleaner plugin loaded...");
@@ -27,27 +21,20 @@ export default class NathanImageCleaner extends Plugin {
 		await this.loadSettings();
 		this.registerDocument(document);
 
-		app.workspace.on(
-			"window-open",
-			(workspaceWindow, window) => {
-				this.registerDocument(window.document);
-			}
-		);
+		app.workspace.on("window-open", (workspaceWindow, window) => {
+			this.registerDocument(window.document);
+		});
 		// add contextmenu on file context
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file) => {
 				if (file instanceof TFile) {
 					const addMenuItem = (item: MenuItem) => {
-						item.
-							setTitle("Delete the file and its all attachments")
-							.setIcon('trash-2')
-							.setSection('danger')
-							;
+						item.setTitle("Delete the file and its all attachments")
+							.setIcon("trash-2")
+							.setSection("danger");
 						item.onClick(async () => {
-							// 1.delete all attachment in the note
-							deleteAllAttachs(this);
-							// 2.delete current note
-							deleteNote(app.workspace.getActiveFile() as TFile)
+							const modal = new DeleteAllLogsModal(file, this);
+							modal.open();
 						});
 					};
 					menu.addItem(addMenuItem);
@@ -56,7 +43,6 @@ export default class NathanImageCleaner extends Plugin {
 		);
 		// register all commands in addCommand function
 		addCommand(this);
-
 	}
 
 	onunload() {
@@ -92,7 +78,6 @@ export default class NathanImageCleaner extends Plugin {
 				)) */
 	}
 
-
 	async loadSettings() {
 		this.settings = Object.assign(
 			{},
@@ -123,10 +108,10 @@ export default class NathanImageCleaner extends Plugin {
 
 	/**
 	 * 设置菜单按钮，并设置点击事件
-	 * 
-	 * @param menu 
-	 * @param FileBaseName 
-	 * @param currentMd 
+	 *
+	 * @param menu
+	 * @param FileBaseName
+	 * @param currentMd
 	 */
 	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile) => {
 		menu.addItem((item: MenuItem) =>
@@ -142,7 +127,7 @@ export default class NathanImageCleaner extends Plugin {
 					}
 				})
 		);
-	}
+	};
 
 	/**
 	 * 鼠标点击事件
@@ -155,15 +140,16 @@ export default class NathanImageCleaner extends Plugin {
 
 		const menu = new Menu();
 		// target deleted img file base name
-		const RegFileBaseName = new RegExp(/\/?([^\/\n]+\.\w+)/, 'm');
-		let imgPath = '';
-		const delTargetType = ['img', 'iframe', 'video', 'div', 'audio'];
-
+		const RegFileBaseName = new RegExp(/\/?([^\/\n]+\.\w+)/, "m");
+		let imgPath = "";
+		const delTargetType = ["img", "iframe", "video", "div", "audio"];
 
 		if (delTargetType.includes(nodeType)) {
 			imgPath = target.parentElement?.getAttribute("src") as string;
-			const FileBaseName = (imgPath?.match(RegFileBaseName) as string[])[1];
-			if (target.className === 'file-embed-title') {
+			const FileBaseName = (
+				imgPath?.match(RegFileBaseName) as string[]
+			)[1];
+			if (target.className === "file-embed-title") {
 				this.addMenu(menu, FileBaseName, currentMd);
 			}
 			this.addMenu(menu, FileBaseName, currentMd);

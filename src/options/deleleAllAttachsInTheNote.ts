@@ -1,6 +1,6 @@
 import { Notice, TFile, TFolder } from "obsidian";
 import { getFileParentFolder } from "src/util";
-import { deleteAttach } from "src/utils/deleteFile";
+import { deleteFile } from "src/utils/deleteFile";
 import NathanImageCleaner from "../../src/main";
 /**
  * delAllAttachsByCommand
@@ -20,16 +20,16 @@ export const deleteAllAttachs = async (plugin: NathanImageCleaner) => {
 			for (const [filePath, nr] of Object.entries(links)) {
 				// If the filePath ends with '.md' ,which indicates the file is markdown file, and do not delete it
 				if (filePath.match(/.*\.md$/m)) continue;
-				attachsPaths.push(filePath);
 				// if the attachment in the note has been referenced by other notes  simultaneously skip it.
 				if (isReferencedByOtherNotes(filePath, activeMd)) continue;
+				attachsPaths.push(filePath);
 				try {
 					// 2. get TFile of the attachment referenced by file
 					const AttachFile: TFile = app.vault.getAbstractFileByPath(
 						filePath
 					) as TFile;
 					if (AttachFile instanceof TFile) {
-						deleteAttach(AttachFile, plugin);
+						deleteFile(AttachFile, plugin);
 					}
 					const parentFolder = getFileParentFolder(
 						AttachFile
@@ -40,9 +40,10 @@ export const deleteAllAttachs = async (plugin: NathanImageCleaner) => {
 					}
 					fileCount = fileCount - 1;
 					if (!fileCount) {
-						await app.vault.delete(parentFolder, true);
+						await deleteFile(parentFolder, plugin);
+						// await app.vault.delete(parentFolder, true);
 						new Notice(
-							"All attachments with parent folder deleted!",
+							"All attachments and its parent folder deleted!",
 							3000
 						);
 					}
@@ -71,7 +72,7 @@ const isReferencedByOtherNotes = (
 		if (mdFile !== currentMd.path) {
 			for (const [filePath, nr] of Object.entries(links)) {
 				if (filePath === attachPath) {
-					return (flag = true);
+					flag = true;
 				}
 			}
 		}
@@ -126,4 +127,19 @@ export const removeAllUnusedReferenceLinks = async (
 		if (isNotTargetLine) newContents.push(line);
 	}
 	app.vault.adapter.write(activeMd.path, newContents.join("\n"));
+};
+export const getRefencedLinkCount = (): number => {
+	const activeMd: TFile = app.workspace.getActiveFile() as TFile;
+	const resolvedLinks = app.metadataCache.resolvedLinks;
+	const attachsPaths: string[] = [];
+	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
+		if (activeMd?.path === mdFile) {
+			for (const [filePath, nr] of Object.entries(links)) {
+				if (filePath.match(/.*\.md$/m)) continue;
+				if (isReferencedByOtherNotes(filePath, activeMd)) continue;
+				attachsPaths.push(filePath);
+			}
+		}
+	}
+	return attachsPaths.length;
 };
