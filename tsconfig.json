@@ -11,7 +11,8 @@
 		"importHelpers": true,
 		"isolatedModules": true,
 		"strictNullChecks": true,
-		"lib": ["dom","es5","Scripthost","es2015"]
+		"lib": ["dom", "es5", "Scripthost", "es2015"]
 	},
+
 	"include": ["**/*.ts"]
 }

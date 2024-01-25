@@ -50,3 +50,7 @@
 
 -   🐞 fix: the markdown file as a attachment in other files wiil be deleted when executing the 'Delete the file and its.... ' command
 -   🐞 fix: [#10](https://github.com/martinniee/Obsidian-fast-image-cleaner/issues/10)
+
+## Realease 0.8.2 2024/01/25
+
+-   fix: #13
