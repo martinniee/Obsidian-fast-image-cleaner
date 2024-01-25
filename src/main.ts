@@ -69,13 +69,6 @@ export default class NathanImageCleaner extends Plugin {
 				this.onClick.bind(this)
 			)
 		);
-		/* 	this.register(
-				this.onElement(
-					document,
-					"contextmenu" as keyof HTMLElementEventMap,
-					"div.nav-file",
-					this.IsdeleteNoteWithItsAllAttachments.bind(this)
-				)) */
 	}
 
 	async loadSettings() {
@@ -106,19 +99,11 @@ export default class NathanImageCleaner extends Plugin {
 		);
 	}
 
-	/**
-	 * 设置菜单按钮，并设置点击事件
-	 *
-	 * @param menu
-	 * @param FileBaseName
-	 * @param currentMd
-	 */
 	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile) => {
 		menu.addItem((item: MenuItem) =>
 			item
 				.setIcon("trash-2")
 				.setTitle("clear file and referenced link")
-				.setChecked(true)
 				.onClick(async () => {
 					try {
 						Util.handlerDelFile(FileBaseName, currentMd, this);
@@ -129,9 +114,6 @@ export default class NathanImageCleaner extends Plugin {
 		);
 	};
 
-	/**
-	 * 鼠标点击事件
-	 */
 	onClick(event: MouseEvent) {
 		const target = getMouseEventTarget(event);
 		const nodeType = target.localName;
@@ -139,32 +121,20 @@ export default class NathanImageCleaner extends Plugin {
 		const currentMd = app.workspace.getActiveFile() as TFile;
 
 		const menu = new Menu();
-		// target deleted img file base name
-		const RegFileBaseName = new RegExp(/\/?([^\/\n]+\.\w+)/, "m");
+		// regex of target deleted img file base name (support most of common file extensions)
+		const fileBasenameRegex = new RegExp(/(?<=\/)[^\/]*\.[\w\d]+$/);
 		let imgPath = "";
 		const delTargetType = ["img", "iframe", "video", "div", "audio"];
 
 		if (delTargetType.includes(nodeType)) {
 			imgPath = target.parentElement?.getAttribute("src") as string;
-			const FileBaseName = (
-				imgPath?.match(RegFileBaseName) as string[]
-			)[1];
-			if (target.className === "file-embed-title") {
-				this.addMenu(menu, FileBaseName, currentMd);
-			}
-			this.addMenu(menu, FileBaseName, currentMd);
+			const fileBaseName = (
+				imgPath.match(fileBasenameRegex) as RegExpMatchArray
+			)[0];
+			this.addMenu(menu, fileBaseName, currentMd);
 		}
 		this.registerEscapeButton(menu);
 		menu.showAtPosition({ x: event.pageX, y: event.pageY - 40 });
 		this.app.workspace.trigger("NL-fast-file-cleaner:contextmenu", menu);
 	}
-
-	/* IsdeleteNoteWithItsAllAttachments = async (event: MouseEvent):Promise<boolean> => {
-		// 1.get mouse event target
-		const nav_file_title = getMouseEventTarget(event);
-		const data_path = nav_file_title.getAttribute('data-path') as string;
-		const isMdFile = data_path.match(/.*\.md/) !== null;
-		// 2.if the target is a element  representing .md file ,then delete the note
-		return isMdFile ? true : false;
-	} */
 }
