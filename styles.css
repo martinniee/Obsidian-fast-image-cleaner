@@ -2,6 +2,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	margin-top: 10px;
 }
 .fast-image-cleaner-log {
 	margin-bottom: 13px;
