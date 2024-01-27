@@ -1,6 +1,10 @@
 import { Notice, TFile, TFolder } from "obsidian";
 import { getFileParentFolder } from "src/util";
-import { deleteFile } from "src/utils/deleteFile";
+import {
+	deleteAllFoldersWithoutSibling,
+	deleteFile,
+	getAllFoldersWithoutSibling,
+} from "src/utils/deleteFile";
 import NathanImageCleaner from "../../src/main";
 /**
  * delAllAttachsByCommand
@@ -40,8 +44,17 @@ export const deleteAllAttachs = async (plugin: NathanImageCleaner) => {
 					}
 					fileCount = fileCount - 1;
 					if (!fileCount) {
+						const folders: TFolder[] = [];
+						const aLlFoldersWithoutSibing =
+							getAllFoldersWithoutSibling(parentFolder, folders);
+
 						await deleteFile(parentFolder, plugin);
-						// await app.vault.delete(parentFolder, true);
+
+						await deleteAllFoldersWithoutSibling(
+							aLlFoldersWithoutSibing,
+							plugin
+						);
+
 						new Notice(
 							"All attachments and its parent folder deleted!",
 							3000

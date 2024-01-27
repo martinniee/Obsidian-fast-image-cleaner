@@ -3,6 +3,10 @@ import { TFile, Notice, TFolder } from "obsidian";
 import { imageReferencedState } from "./enum/imageReferencedState";
 import { resultDetermineImageDeletion as deletionResult } from "./interface/resultDetermineImageDeletion";
 import { LogsModal } from "./modals";
+import {
+	deleteAllFoldersWithoutSibling,
+	getAllFoldersWithoutSibling,
+} from "./utils/deleteFile";
 const SUCCESS_NOTICE_TIMEOUT = 1800;
 export interface metaData {
 	[propName: string]: {
@@ -212,6 +216,12 @@ export const ClearAttachment = async (
 	await delImgRefLink.process({ FileBaseName });
 	const delFileFolder = onlyOneFileExists(file);
 	const fileFolder = getFileParentFolder(file) as TFolder;
+	const folders: TFolder[] = [];
+	const aLlFoldersWithoutSibing = getAllFoldersWithoutSibling(
+		fileFolder,
+		folders
+	);
+
 	try {
 		if (deleteOption === ".trash") {
 			await app.vault.trash(file, false);
@@ -221,21 +231,33 @@ export const ClearAttachment = async (
 			);
 			if (delFileFolder) {
 				await app.vault.trash(fileFolder, false);
-				new Notice("Attachment folder have been deleted!", 3000);
+				await deleteAllFoldersWithoutSibling(
+					aLlFoldersWithoutSibing,
+					plugin
+				);
+				new Notice("Attachment folder has been deleted!", 3000);
 			}
 		} else if (deleteOption === "system-trash") {
 			await app.vault.trash(file, true);
 			new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
 			if (delFileFolder) {
 				await app.vault.trash(fileFolder, true);
-				new Notice("Attachment folder have been deleted!", 3000);
+				await deleteAllFoldersWithoutSibling(
+					aLlFoldersWithoutSibing,
+					plugin
+				);
+				new Notice("Attachment folder has been deleted!", 3000);
 			}
 		} else if (deleteOption === "permanent") {
 			await app.vault.delete(file);
 			new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
 			if (delFileFolder) {
-				await app.vault.delete(fileFolder, true);
-				new Notice("Attachment folder have been deleted!", 3000);
+				await app.vault.delete(fileFolder);
+				await deleteAllFoldersWithoutSibling(
+					aLlFoldersWithoutSibing,
+					plugin
+				);
+				new Notice("Attachment folder has been deleted!", 3000);
 			}
 		}
 	} catch (error) {

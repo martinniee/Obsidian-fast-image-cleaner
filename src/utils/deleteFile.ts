@@ -20,7 +20,10 @@ export const deleteFile = async (
 		}
 	} catch (error) {
 		console.error(error);
-		new Notice("Faild to delete the file/folder !", SUCCESS_NOTICE_TIMEOUT);
+		new Notice(
+			"Failed to delete the file/folder !",
+			SUCCESS_NOTICE_TIMEOUT
+		);
 	}
 };
 /**
@@ -31,3 +34,26 @@ export const deleteFile = async (
 	// @ts-ignore
 	app.fileManager.promptForDeletion(file);
 }; */
+
+export const getAllFoldersWithoutSibling = (
+	fileFolder: TFolder,
+	folders: TFolder[]
+): TFolder[] => {
+	const parentFolder = fileFolder.parent;
+	if (parentFolder instanceof TFolder && parentFolder.children.length === 1) {
+		folders.push(parentFolder);
+		return getAllFoldersWithoutSibling(parentFolder, folders);
+	}
+	return folders;
+};
+
+export const deleteAllFoldersWithoutSibling = async (
+	allFoldersWithoutSibing: TFolder[],
+	plugin: NathanImageCleaner
+) => {
+	if (allFoldersWithoutSibing.length != 0) {
+		for (const folder of allFoldersWithoutSibing) {
+			await deleteFile(folder, plugin);
+		}
+	}
+};
