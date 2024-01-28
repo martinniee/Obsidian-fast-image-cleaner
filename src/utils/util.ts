@@ -11,7 +11,7 @@ import { removeReferenceLink } from "./removeReferenceLink";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
 
-export const isRemove = (
+export const determineRemove = (
 	imgPath: string
 ): { state: number; mdPath: string[] } => {
 	const currentMd = app.workspace.getActiveFile() as TFile;
@@ -146,7 +146,7 @@ export const handlerDelFile = (
 ) => {
 	let logs: string[];
 	let modal;
-	const state: number = isRemove(imgPath).state;
+	const state: number = determineRemove(imgPath).state;
 	switch (state) {
 		case 0:
 			// clear attachment directly
@@ -155,7 +155,7 @@ export const handlerDelFile = (
 		case 1:
 		case 2:
 			// referenced by eithor only note or other mutiple notes more than once
-			logs = isRemove(imgPath).mdPath as string[];
+			logs = determineRemove(imgPath).mdPath as string[];
 			modal = new LogsModal(currentMd, state, imgPath, logs, app);
 			modal.open();
 		default:
