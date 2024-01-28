@@ -23,14 +23,11 @@ export const removeReferenceLink = new fileContentsProcess(
 						// [^!\[\]\n] Do not use '[',']','\n','!' in the alt text for properly operation of the plugin.
 						const targetRegex = new RegExp(
 							`!\\[[^!\\[\\]\n]*?\\]\\(${escapeRegex(
-								imgPath
+								imgPath.replace(/ /g, "%20")
 							)}\\)`,
 							"g"
 						);
-						const replaced = lines[i]
-							.replace(/%20/g, " ")
-							.replace(targetRegex, "")
-							.replace(/ /g, "%20");
+						const replaced = lines[i].replace(targetRegex, "");
 						lines[i] = replaced;
 					}
 				}
@@ -39,10 +36,9 @@ export const removeReferenceLink = new fileContentsProcess(
 
 				for (const match of allMatches) {
 					let imgLinkPath = match.groups?.imgLinkPath as string;
-
 					imgLinkPath = imgLinkPath.trim();
+
 					if (imgLinkPath === imgPath) {
-						let text = escapeRegex("![[]]");
 						const replaced = lines[i].replace(
 							new RegExp(
 								`!\\[\\[(?<imgLinkPath>${escapeRegex(
