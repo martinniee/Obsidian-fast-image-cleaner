@@ -1,16 +1,16 @@
 import { Modal, App, TFile } from "obsidian";
-import { delImgRefLink } from "./util";
+import { removeReferenceLink } from "./utils/removeReferenceLink";
 
 export class LogsModal extends Modal {
 	textToView: string[];
 	currentMd: TFile;
 	state: number;
-	FileBaseName: string;
+	imgPath: string;
 
 	constructor(
 		currentMd: TFile,
 		state: number,
-		FileBaseName: string,
+		imgPath: string,
 		textToView: string[],
 		app: App
 	) {
@@ -18,7 +18,7 @@ export class LogsModal extends Modal {
 		this.textToView = textToView;
 		this.currentMd = currentMd;
 		this.state = state;
-		this.FileBaseName = FileBaseName;
+		this.imgPath = imgPath;
 	}
 
 	getLog(): string {
@@ -86,7 +86,7 @@ export class LogsModal extends Modal {
 		);
 		removeLinkButton.addClass("mod-warning");
 		removeLinkButton.addEventListener("click", async () => {
-			await delImgRefLink.process({ FileBaseName: this.FileBaseName });
+			await removeReferenceLink.process({ imgPath: this.imgPath });
 			myModal.close();
 		});
 	}

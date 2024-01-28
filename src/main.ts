@@ -2,7 +2,7 @@ import { Menu, MenuItem, Notice, Plugin, TFile } from "obsidian";
 import { addCommand } from "./config/addCommand-config";
 import { NathanImageCleanerSettingsTab } from "./settings";
 import { NathanImageCleanerSettings, DEFAULT_SETTINGS } from "./settings";
-import * as Util from "./util";
+import * as Util from "./utils/util";
 import { getMouseEventTarget } from "./utils/handlerEvent";
 import { DeleteAllLogsModal } from "./modals/deletionPrompt";
 
@@ -99,14 +99,14 @@ export default class NathanImageCleaner extends Plugin {
 		);
 	}
 
-	addMenu = (menu: Menu, FileBaseName: string, currentMd: TFile) => {
+	addMenu = (menu: Menu, imgPath: string, currentMd: TFile) => {
 		menu.addItem((item: MenuItem) =>
 			item
 				.setIcon("trash-2")
 				.setTitle("clear file and referenced link")
 				.onClick(async () => {
 					try {
-						Util.handlerDelFile(FileBaseName, currentMd, this);
+						Util.handlerDelFile(imgPath, currentMd, this);
 					} catch {
 						new Notice("Error, could not clear the file!");
 					}
@@ -121,17 +121,12 @@ export default class NathanImageCleaner extends Plugin {
 		const currentMd = app.workspace.getActiveFile() as TFile;
 
 		const menu = new Menu();
-		// regex of target deleted img file base name (support most of common file extensions)
-		const fileBasenameRegex = new RegExp(/(?<=\/)[^\/]*\.[\w\d]+$/);
 		let imgPath = "";
 		const delTargetType = ["img", "iframe", "video", "div", "audio"];
 
 		if (delTargetType.includes(nodeType)) {
 			imgPath = target.parentElement?.getAttribute("src") as string;
-			const fileBaseName = (
-				imgPath.match(fileBasenameRegex) as RegExpMatchArray
-			)[0];
-			this.addMenu(menu, fileBaseName, currentMd);
+			this.addMenu(menu, imgPath, currentMd);
 		}
 		this.registerEscapeButton(menu);
 		menu.showAtPosition({ x: event.pageX, y: event.pageY - 40 });

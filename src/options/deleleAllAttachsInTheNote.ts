@@ -1,5 +1,5 @@
 import { Notice, TFile, TFolder } from "obsidian";
-import { getFileParentFolder } from "src/util";
+import { getFileParentFolder } from "src/utils/util";
 import {
 	deleteAllFoldersWithoutSibling,
 	deleteFile,
@@ -99,7 +99,7 @@ const isReferencedByOtherNotes = (
  * @param imagePaths  path  list  of the current deleted image without subpath,format as  name.extension
  * @param mdFile  the markdown file containing the deleted image
  */
-export const removeAllUnusedReferenceLinks = async (
+/* export const removeAllUnusedReferenceLinks = async (
 	activeMd: TFile,
 	attachsPaths: string[]
 ) => {
@@ -140,7 +140,7 @@ export const removeAllUnusedReferenceLinks = async (
 		if (isNotTargetLine) newContents.push(line);
 	}
 	app.vault.adapter.write(activeMd.path, newContents.join("\n"));
-};
+}; */
 export const getRefencedLinkCount = (): number => {
 	const activeMd: TFile = app.workspace.getActiveFile() as TFile;
 	const resolvedLinks = app.metadataCache.resolvedLinks;
