@@ -54,3 +54,9 @@
 ## Realease 0.8.2 2024/01/25
 
 -   fix: #13
+
+## Realease 0.8.3 2024/03/10
+
+-   feat: support to remove image reference link with other links in one line.
+-   feat: Supports to delete all folders, and the parent folder of this folder only contains the folder itself
+-   Breaking change: improve the logic to delete attach folder
