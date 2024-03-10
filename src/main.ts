@@ -3,7 +3,6 @@ import { addCommand } from "./config/addCommand-config";
 import { NathanImageCleanerSettingsTab } from "./settings";
 import { NathanImageCleanerSettings, DEFAULT_SETTINGS } from "./settings";
 import * as Util from "./utils/util";
-import { getMouseEventTarget } from "./utils/handlerEvent";
 import { DeleteAllLogsModal } from "./modals/deletionPrompt";
 
 interface Listener {
@@ -115,7 +114,8 @@ export default class NathanImageCleaner extends Plugin {
 	};
 
 	onClick(event: MouseEvent) {
-		const target = getMouseEventTarget(event);
+		event.preventDefault();
+		const target = event.target as HTMLElement;
 		const nodeType = target.localName;
 
 		const currentMd = app.workspace.getActiveFile() as TFile;

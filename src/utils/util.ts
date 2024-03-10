@@ -1,7 +1,5 @@
 import NathanImageCleaner from "src/main";
 import { TFile, Notice, TFolder } from "obsidian";
-import { imageReferencedState } from "../enum/imageReferencedState";
-import { resultDetermineImageDeletion as deletionResult } from "../interface/resultDetermineImageDeletion";
 import { LogsModal } from "../modals";
 import {
 	deleteAllFoldersWithoutSibling,
@@ -10,6 +8,17 @@ import {
 import { removeReferenceLink } from "./removeReferenceLink";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
+
+interface resultDetermineImageDeletion {
+	state: number;
+	mdPath: string[];
+}
+
+enum imageReferencedState {
+	ONCE = 0, // only referenced once
+	MUTIPLE = 1, // referenced by mutilple notes
+	MORE = 2, // referenced more than once
+}
 
 export const determineRemove = (
 	imgPath: string
@@ -21,7 +30,7 @@ export const determineRemove = (
 		| undefined;
 	let CurMDPath: string;
 	// // record the state of image referenced and all paths of markdown referencing to the image
-	let result: deletionResult = {
+	let result: resultDetermineImageDeletion = {
 		state: 0,
 		mdPath: [],
 	};
