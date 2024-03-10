@@ -3,8 +3,8 @@ import NathanImageCleaner from "src/main";
 import {
 	deleteAllAttachs,
 	getRefencedLinkCount,
-} from "src/options/deleleAllAttachsInTheNote";
-import { deleteFile } from "src/utils/deleteFile";
+} from "src/utils/deleleAllAttachsInTheNote";
+import { deleteFile } from "src/utils/util";
 
 export class DeleteAllLogsModal extends Modal {
 	note: TFile;

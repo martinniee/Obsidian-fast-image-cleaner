@@ -1,5 +1,4 @@
 import NathanImageCleaner from "src/main";
-import { deleteAllAttachs } from "src/options/deleleAllAttachsInTheNote";
 
 export const addCommand = (myPlugin: NathanImageCleaner) => {
 	/* myPlugin.addCommand({

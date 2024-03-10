@@ -1,10 +1,6 @@
 import NathanImageCleaner from "src/main";
 import { TFile, Notice, TFolder } from "obsidian";
 import { LogsModal } from "../modals";
-import {
-	deleteAllFoldersWithoutSibling,
-	getAllFoldersWithoutSibling,
-} from "./deleteFile";
 import { removeReferenceLink } from "./removeReferenceLink";
 
 const SUCCESS_NOTICE_TIMEOUT = 1800;
@@ -98,11 +94,6 @@ export const ClearAttachment = async (
 	await removeReferenceLink.process({ imgPath });
 	const delFileFolder = onlyOneFileExists(file);
 	const fileFolder = getFileParentFolder(file) as TFolder;
-	const folders: TFolder[] = [];
-	const aLlFoldersWithoutSibing = getAllFoldersWithoutSibling(
-		fileFolder,
-		folders
-	);
 
 	try {
 		if (deleteOption === ".trash") {
@@ -112,35 +103,23 @@ export const ClearAttachment = async (
 				SUCCESS_NOTICE_TIMEOUT
 			);
 			if (delFileFolder) {
-				await app.vault.trash(fileFolder, false);
-				await deleteAllFoldersWithoutSibling(
-					aLlFoldersWithoutSibing,
-					plugin
-				);
-				new Notice("Attachment folder has been deleted!", 3000);
+				deleteFile(getTopFolderOnlyOneChild(fileFolder), plugin);
 			}
 		} else if (deleteOption === "system-trash") {
 			await app.vault.trash(file, true);
 			new Notice("Image moved to System Trash !", SUCCESS_NOTICE_TIMEOUT);
 			if (delFileFolder) {
-				await app.vault.trash(fileFolder, true);
-				await deleteAllFoldersWithoutSibling(
-					aLlFoldersWithoutSibing,
-					plugin
-				);
-				new Notice("Attachment folder has been deleted!", 3000);
+				deleteFile(getTopFolderOnlyOneChild(fileFolder), plugin);
 			}
 		} else if (deleteOption === "permanent") {
 			await app.vault.delete(file);
 			new Notice("Image deleted Permanently !", SUCCESS_NOTICE_TIMEOUT);
 			if (delFileFolder) {
-				await app.vault.delete(fileFolder);
-				await deleteAllFoldersWithoutSibling(
-					aLlFoldersWithoutSibing,
-					plugin
-				);
-				new Notice("Attachment folder has been deleted!", 3000);
+				deleteFile(getTopFolderOnlyOneChild(fileFolder), plugin);
 			}
+		}
+		if (delFileFolder) {
+			new Notice("Attachment folder has been deleted!", 3000);
 		}
 	} catch (error) {
 		console.error(error);
@@ -204,4 +183,46 @@ export const deleteArrayElement = (arr: string[], index: number): string[] => {
 };
 export const escapeRegex = (str: string): string => {
 	return str.replace(/[/\-\\^$*+?.()|[\]{}]/g, "\\$&");
+};
+export const getTopFolderOnlyOneChild = (folder: TFolder): TFolder => {
+	const parentFolder = folder.parent;
+	if (parentFolder instanceof TFolder && parentFolder.children.length === 1) {
+		return getTopFolderOnlyOneChild(parentFolder);
+	}
+	return folder;
+};
+
+/**
+ * Delete note
+ * @param file
+ */
+/* export const deleteNote = (file: TFile) => {
+	// @ts-ignore
+	app.fileManager.promptForDeletion(file);
+}; */
+
+/**
+ * Delete attachment
+ * @param file
+ */
+export const deleteFile = async (
+	file: TFile | TFolder,
+	plugin: NathanImageCleaner
+) => {
+	const deleteOption = plugin.settings.deleteOption;
+	try {
+		if (deleteOption === ".trash") {
+			await app.vault.trash(file, false);
+		} else if (deleteOption === "system-trash") {
+			await app.vault.trash(file, true);
+		} else if (deleteOption === "permanent") {
+			await app.vault.delete(file);
+		}
+	} catch (error) {
+		console.error(error);
+		new Notice(
+			"Failed to delete the file/folder !",
+			SUCCESS_NOTICE_TIMEOUT
+		);
+	}
 };

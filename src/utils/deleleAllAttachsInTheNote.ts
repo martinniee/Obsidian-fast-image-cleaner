@@ -1,71 +1,95 @@
 import { Notice, TFile, TFolder } from "obsidian";
-import { getFileParentFolder } from "src/utils/util";
 import {
-	deleteAllFoldersWithoutSibling,
 	deleteFile,
-	getAllFoldersWithoutSibling,
-} from "src/utils/deleteFile";
-import NathanImageCleaner from "../../src/main";
-/**
- * delAllAttachsByCommand
- *
- * 1. get current file
- * 2. get TFile of the attachment referenced by file
- */
+	getFileParentFolder,
+	getTopFolderOnlyOneChild,
+} from "src/utils/util";
+import NathanImageCleaner from "../main";
+
+interface attachInfoArrType {
+	folder: TFolder;
+	initialLength: number;
+	attachCount: number;
+	attachFiles: TFile[];
+}
 export const deleteAllAttachs = async (plugin: NathanImageCleaner) => {
-	// 1. get current file
 	const activeMd: TFile = app.workspace.getActiveFile() as TFile;
 	const resolvedLinks = app.metadataCache.resolvedLinks;
-	const attachsPaths: string[] = [];
+	const attachInfoArr: attachInfoArrType[] = [];
+
 	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
-		if (activeMd?.path === mdFile) {
-			let fileCount = 0;
-			let flag = false;
-			for (const [filePath, nr] of Object.entries(links)) {
-				// If the filePath ends with '.md' ,which indicates the file is markdown file, and do not delete it
-				if (filePath.match(/.*\.md$/m)) continue;
-				// if the attachment in the note has been referenced by other notes  simultaneously skip it.
-				if (isReferencedByOtherNotes(filePath, activeMd)) continue;
-				attachsPaths.push(filePath);
-				try {
-					// 2. get TFile of the attachment referenced by file
-					const AttachFile: TFile = app.vault.getAbstractFileByPath(
-						filePath
-					) as TFile;
-					if (AttachFile instanceof TFile) {
-						deleteFile(AttachFile, plugin);
-					}
-					const parentFolder = getFileParentFolder(
-						AttachFile
-					) as TFolder;
-					if (!flag) {
-						fileCount = parentFolder.children.length;
-						flag = !flag;
-					}
-					fileCount = fileCount - 1;
-					if (!fileCount) {
-						const folders: TFolder[] = [];
-						const aLlFoldersWithoutSibing =
-							getAllFoldersWithoutSibling(parentFolder, folders);
+		if (activeMd?.path !== mdFile) continue;
+		if (Object.keys(links).length == 0) break;
 
-						await deleteFile(parentFolder, plugin);
+		for (const [filePath, nr] of Object.entries(links)) {
+			if (filePath.match(/.*\.md$/m)) continue;
+			if (isReferencedByOtherNotes(filePath, activeMd)) continue;
+			try {
+				const AttachFile: TFile = app.vault.getAbstractFileByPath(
+					filePath
+				) as TFile;
+				const parentFolder = getFileParentFolder(AttachFile) as TFolder;
 
-						await deleteAllFoldersWithoutSibling(
-							aLlFoldersWithoutSibing,
-							plugin
-						);
+				if (!(AttachFile instanceof TFile)) continue;
 
-						new Notice(
-							"All attachments and its parent folder deleted!",
-							3000
-						);
+				if (
+					attachInfoArr.length !== 0 &&
+					attachInfoArr.some((item) => item.folder === parentFolder)
+				) {
+					for (let i = 0; i < attachInfoArr.length; i++) {
+						const element = attachInfoArr[i];
+						if (element.folder === parentFolder) {
+							attachInfoArr[i].attachCount += 1;
+							attachInfoArr[i].attachFiles.push(AttachFile);
+						}
 					}
-				} catch (error) {
-					console.warn(error);
+				} else {
+					attachInfoArr.push({
+						folder: parentFolder,
+						initialLength: parentFolder.children.length,
+						attachCount: 1,
+						attachFiles: [AttachFile],
+					});
 				}
+			} catch (error) {
+				console.warn(error);
 			}
 		}
 	}
+	const shouldDeleteAllAttachsAndFolder = attachInfoArr.every(
+		(item) => item.initialLength === item.attachCount
+	);
+
+	if (shouldDeleteAllAttachsAndFolder) {
+		for (const item of attachInfoArr) {
+			const deletedFolder = getTopFolderOnlyOneChild(item.folder);
+			await deleteFile(deletedFolder, plugin);
+		}
+	} else {
+		const deletedFolders = attachInfoArr.filter(
+			(item) => item.initialLength === item.attachCount
+		);
+		const deletedAttachs = attachInfoArr.filter(
+			(item) => item.initialLength !== item.attachCount
+		);
+		if (deletedFolders.length > 0) {
+			for (const item of deletedFolders) {
+				const deletedFolder = getTopFolderOnlyOneChild(item.folder);
+				await deleteFile(deletedFolder, plugin);
+			}
+		}
+		for (const item of deletedAttachs) {
+			for (const attachFile of item.attachFiles) {
+				await deleteFile(attachFile, plugin);
+			}
+		}
+	}
+
+	new Notice(
+		"All attachments and its parent folder have been deleted!",
+		3000
+	);
+
 	// removeAllUnusedReferenceLinks(activeMd, attachsPaths);
 };
 /**
@@ -144,15 +168,16 @@ const isReferencedByOtherNotes = (
 export const getRefencedLinkCount = (): number => {
 	const activeMd: TFile = app.workspace.getActiveFile() as TFile;
 	const resolvedLinks = app.metadataCache.resolvedLinks;
-	const attachsPaths: string[] = [];
+	let count = 0;
 	for (const [mdFile, links] of Object.entries(resolvedLinks)) {
-		if (activeMd?.path === mdFile) {
-			for (const [filePath, nr] of Object.entries(links)) {
-				if (filePath.match(/.*\.md$/m)) continue;
-				if (isReferencedByOtherNotes(filePath, activeMd)) continue;
-				attachsPaths.push(filePath);
-			}
+		if (activeMd?.path !== mdFile) continue;
+		if (Object.keys(links).length == 0) break;
+
+		for (const [filePath, nr] of Object.entries(links)) {
+			if (filePath.match(/.*\.md$/m)) continue;
+			if (isReferencedByOtherNotes(filePath, activeMd)) continue;
+			count++;
 		}
 	}
-	return attachsPaths.length;
+	return count;
 };
