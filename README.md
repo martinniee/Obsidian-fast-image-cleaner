@@ -1,12 +1,13 @@
 # Fast Image Cleaner
 
+>[!NOTE] 
+>  Archived notifications
+>
+> There is now a plugin [AttachFlow](https://github.com/Yaozhuwa/AttachFlow) (forked this project) includes but is not limited to the functional characteristics of this plugin, and can provide a better experience, so decided to suspend the maintenance of this project!
+
 [中文](./ZH.md) / EN
 
 This plugin can fast delete image (or video, audio, file .....) attachment and remove referenced link by right clicking on the context menu option. 
-
-## Demo
-
-//The feature has been updated. waiting...........
 
 ## Features
 
