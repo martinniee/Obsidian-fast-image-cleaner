@@ -8,9 +8,10 @@
 </div>
 
 >[!NOTE] 
->  SUSPEND MAINTENACE
+>  SUSPENDING MAINTENANCE
 >
-> For personal reasons, I have no time to work on the plugin development, so I have decided to stop maintaining it for the time being. There is a  alternative plugin (plugin [AttachFlow](https://github.com/Yaozhuwa/AttachFlow) (forked this project)  ) available that provide better attachment management support and better experience.
+> For personal reasons, I have no time to work on the plugin development, so I have decided to stop maintaining it for the time being. There is an  alternative plugin (plugin [AttachFlow](https://github.com/Yaozhuwa/AttachFlow) (forked this project)  ) available that provide better attachment management support and better experience.
+
 
 This plugin can fast delete image (or video, audio, file .....) attachment and remove referenced link by right clicking on the context menu option. 
 
