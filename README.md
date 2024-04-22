@@ -1,5 +1,12 @@
 # Fast Image Cleaner
 
+<div align="center">
+
+![GitHub Downloads (specific asset, all releases)|150](https://img.shields.io/github/downloads/martinniee/Obsidian-fast-image-cleanermain.js) ![GitHub Downloads (specific asset, latest release)](https://img.shields.io/github/downloads/martinniee/Obsidian-fast-image-cleaner/latest/main.js)
+
+【[中文](./ZH.md) / EN】
+</div>
+
 >[!NOTE] 
 >  Archived notifications
 >
