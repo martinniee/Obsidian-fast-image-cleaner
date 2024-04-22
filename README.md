@@ -8,11 +8,9 @@
 </div>
 
 >[!NOTE] 
->  Archived notifications
+>  SUSPEND MAINTENACE
 >
-> There is now a plugin [AttachFlow](https://github.com/Yaozhuwa/AttachFlow) (forked this project) includes but is not limited to the functional characteristics of this plugin, and can provide a better experience, so decided to suspend the maintenance of this project!
-
-[中文](./ZH.md) / EN
+> For personal reasons, I have no time to work on the plugin development, so I have decided to stop maintaining it for the time being. There is a  alternative plugin (plugin [AttachFlow](https://github.com/Yaozhuwa/AttachFlow) (forked this project)  ) available that provide better attachment management support and better experience.
 
 This plugin can fast delete image (or video, audio, file .....) attachment and remove referenced link by right clicking on the context menu option. 
 
